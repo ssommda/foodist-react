@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Home, SignUp, SignIn } from 'pages';
+import { Home, SignUp, SignIn, PasswordForget, Account } from 'pages';
 import Logo from "components/Logo";
 import Navigation from 'components/Navigation';
 // import SignOutButton from 'components/SignOut';
+import withAuthentication from 'components/withAuthentication';
 
 import * as routes from '../constants/routes';
 import { firebase } from '../firebase';
@@ -51,10 +52,12 @@ class App extends Component {
                     <Route exact path={routes.HOME} component={Home}/>
                     <Route path={routes.SIGN_IN} component={SignIn}/>
                     <Route path={routes.SIGN_UP} component={SignUp}/>
+                    <Route path={routes.ACCOUNT} component={Account}/>
+                    <Route path={routes.PASSWORD_FORGET} component={PasswordForget}/>
                 </div>
             </div>
         );
     }
 }
 
-export default App;
+export default withAuthentication(App);

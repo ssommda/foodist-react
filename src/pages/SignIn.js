@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import styles from 'shared/App.css';
 import { SignUpLink } from './SignUp';
+import { PasswordForgetLink } from './PasswordForget';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
 
@@ -9,6 +10,7 @@ const SignIn = ({ history }) =>
     <div className={styles.formWrap}>
         <h1>SignIn</h1>
         <SignInForm history={history} />
+        <PasswordForgetLink />
         <SignUpLink />
     </div>
 
@@ -43,7 +45,6 @@ class SignInForm extends Component {
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
                 history.push(routes.HOME);
-                alert("로그인성공!");
             })
             .catch(error => {
                 this.setState(byPropKey('error', error));

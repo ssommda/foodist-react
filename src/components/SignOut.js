@@ -4,7 +4,7 @@ import { auth } from '../firebase/index';
 
 const SignOutButton = () =>
     <a
-        href="javascript:void(0)"
+        href="#a"
         onClick={auth.doSignOut}
     >
         로그아웃

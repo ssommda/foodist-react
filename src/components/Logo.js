@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import * as routes from '../constants/routes';
 import styled from 'styled-components';
 import logo from '../logo.png';
 
@@ -8,7 +10,7 @@ const ProjectLogo = styled.h1`
 
 const Logo = () => {
     return (
-        <ProjectLogo><img src={logo} alt=""/></ProjectLogo>
+        <ProjectLogo><Link to={routes.HOME}><img src={logo} alt=""/></Link></ProjectLogo>
     );
 };
 

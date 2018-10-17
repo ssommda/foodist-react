@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import AuthUserContext from './AuthUserContext';
 import SignOutButton from './SignOut';
 import * as routes from '../constants/routes';
 import styled from 'styled-components';
@@ -12,16 +13,17 @@ const MenuWrap = styled.ul`
     overflow: hidden;
 `;
 
-const Navigation = ({ authUser }) =>
-    <div>
-        { authUser
+const Navigation = () =>
+    <AuthUserContext.Consumer>
+        {authUser => authUser
             ? <NavigationAuth />
             : <NavigationNonAuth />
         }
-    </div>
+    </AuthUserContext.Consumer>
 
 const NavigationAuth = () =>
     <MenuWrap>
+        <li className={styles.menuButton}><Link to={routes.ACCOUNT}>Account</Link></li>
         <li className={styles.menuButton}><SignOutButton /></li>
     </MenuWrap>
 
