@@ -1,3 +1,5 @@
+/* 전체 App을 감싸는 곳 */
+
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import { Home, SignUp, SignIn } from 'pages';
@@ -12,7 +14,7 @@ import styled from 'styled-components';
 import styles from 'shared/App.css';
 
 const SearchWrap = styled.div`
-    margin: 0; 
+    margin: 0;
     padding: 0;
 `;
 
