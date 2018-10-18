@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import styles from 'shared/App.module.css';
 import { auth } from '../firebase/index';
 import * as routes from '../constants/routes';
+import logo from '../images/logo.png';
 
 const PasswordForget = () =>
-    <div>
-        <h1>PasswordForget</h1>
-        <PasswordForgetForm />
+    <div className={styles.backWrap}>
+        <div className={styles.formBoxWrap}>
+            <h1><img src={logo} alt="Foodist" /></h1>
+            <div className={styles.formWrap}>
+                <PasswordForgetForm />
+                <Link className={styles.subBtn} to={routes.SIGN_IN}>Sign In</Link>
+                <p>
+                    <Link to={routes.SIGN_UP}>Not a member?</Link>
+                </p>
+            </div>
+        </div>
     </div>
 
 const byPropKey = (propertyName, value) => () => ({
@@ -50,14 +59,18 @@ class PasswordForgetForm extends Component {
 
         return (
             <form onSubmit={this.onSubmit}>
-                <input
-                    value={this.state.email}
-                    onChange={event => this.setState(byPropKey('email', event.target.value))}
-                    type="text"
-                    placeholder="Email Address"
-                />
+                <ul>
+                    <li>
+                        <input
+                            value={this.state.email}
+                            onChange={event => this.setState(byPropKey('email', event.target.value))}
+                            type="text"
+                            placeholder="Enter your e-mail"
+                        />
+                    </li>
+                </ul>
                 <button disabled={isInvalid} type="submit">
-                    비밀번호 초기화
+                    Reset Password
                 </button>
 
                 { error && <p>{error.message}</p> }
@@ -68,8 +81,9 @@ class PasswordForgetForm extends Component {
 
 const PasswordForgetLink = () =>
     <p>
-        <Link to={routes.PASSWORD_FORGET}>Forgot Password?</Link>
+        <Link to={routes.PASSWORD_FORGET}>Forgot your Password?</Link>
     </p>
+
 
 export default PasswordForget;
 

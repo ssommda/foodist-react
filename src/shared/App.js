@@ -10,15 +10,7 @@ import withAuthentication from 'components/withAuthentication';
 
 import * as routes from '../constants/routes';
 import { firebase } from '../firebase';
-
-import styled from 'styled-components';
-import styles from 'shared/App.css';
-
-const SearchWrap = styled.div`
-    margin: 0;
-    padding: 0;
-`;
-
+import styles from './App.module.css';
 
 class App extends Component {
     constructor(props) {
@@ -43,10 +35,6 @@ class App extends Component {
                 <div>
                     <header>
                         <Logo></Logo>
-                        <SearchWrap>
-                            <input type="text"/>
-                            <button>검색</button>
-                        </SearchWrap>
                         <Navigation authUser={this.state.authUser} />
                     </header>
                 </div>

@@ -4,14 +4,8 @@ import { Link } from 'react-router-dom';
 import AuthUserContext from './AuthUserContext';
 import SignOutButton from './SignOut';
 import * as routes from '../constants/routes';
-import styled from 'styled-components';
-import styles from 'shared/App.css';
+import styles from 'shared/App.module.css';
 
-const MenuWrap = styled.ul`
-    margin: 0; 
-    padding: 0;
-    overflow: hidden;
-`;
 
 const Navigation = () =>
     <AuthUserContext.Consumer>
@@ -22,15 +16,16 @@ const Navigation = () =>
     </AuthUserContext.Consumer>
 
 const NavigationAuth = () =>
-    <MenuWrap>
+    <ul className={styles.navMenu}>
+        <li className={styles.menuButton}><Link to={routes.HOME}>Home</Link></li>
         <li className={styles.menuButton}><Link to={routes.ACCOUNT}>Account</Link></li>
         <li className={styles.menuButton}><SignOutButton /></li>
-    </MenuWrap>
+    </ul>
 
 const NavigationNonAuth = () =>
-    <MenuWrap>
-        <li className={styles.menuButton}><Link to={routes.SIGN_IN}>로그인</Link></li>
-        <li className={styles.menuButton}><Link to={routes.SIGN_UP}>회원가입</Link></li>
-    </MenuWrap>
+    <ul>
+        {/*<li className={styles.menuButton}><Link to={routes.SIGN_IN}>Sign In</Link></li>*/}
+        {/*<li className={styles.menuButton}><Link to={routes.SIGN_UP}>Sign Up</Link></li>*/}
+    </ul>
 
 export default Navigation;

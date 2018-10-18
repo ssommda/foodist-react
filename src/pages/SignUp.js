@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import styles from 'shared/App.css';
+import styles from 'shared/App.module.css';
 import { auth, db } from '../firebase';
 import * as routes from '../constants/routes';
+import logo from '../images/logo.png';
 
 const SignUp = ({ history }) =>
-    <div className={styles.formWrap}>
-        <h1>Sign Up</h1>
-        <SignUpForm history={history} />
+    <div className={styles.backWrap}>
+        <div className={styles.formBoxWrap}>
+            <h1><img src={logo} alt="Foodist" /></h1>
+            <div className={styles.formWrap}>
+                <SignUpForm history={history} />
+                <Link className={styles.subBtn} to={routes.SIGN_IN}>Already a member?</Link>
+            </div>
+        </div>
     </div>
     
 const INITIAL_STATE = {
@@ -69,7 +75,7 @@ class SignUpForm extends Component {
         const isInvalid =
             password === '' ||
             email === '' ||
-            nickname === '' && nickname.length > 10;
+            nickname === '' || nickname.length > 10;
 
         return (
             <form onSubmit={this.onSubmit}>
@@ -79,7 +85,7 @@ class SignUpForm extends Component {
                             value={email}
                             onChange={event => this.setState(byPropKey('email', event.target.value))}
                             type="text"
-                            placeholder="Email Address"
+                            placeholder="Enter your e-mail"
                         />
                     </li>
                     <li>
@@ -111,11 +117,8 @@ class SignUpForm extends Component {
 }
 
 const SignUpLink = () =>
-    <p>
-        Don't have an account?
-        {' '}
-        <Link to={routes.SIGN_UP}>Sign Up</Link>
-    </p>
+    <Link className={styles.subBtn} to={routes.SIGN_UP}>Sign Up</Link>
+
 
 export default withRouter(SignUp);
 export {

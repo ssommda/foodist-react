@@ -23,9 +23,6 @@ class HomePage extends Component {
 
         return (
             <div>
-                <h1>Home</h1>
-                <p>The Home Page is accessible by every signed in user.</p>
-
                 {!!users && <UserList users={users}/>}
             </div>
         );
@@ -34,10 +31,10 @@ class HomePage extends Component {
 
 const UserList = ({ users }) =>
     <div>
-        <h2>닉네임리스트</h2>
+        <h2>가입자 이메일 리스트</h2>
 
         {Object.keys(users).map(key =>
-            <div key={key}>{users[key].nickname}</div>
+            <div key={key}>{users[key].email}</div>
         )}
     </div>
 

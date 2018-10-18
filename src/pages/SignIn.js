@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import styles from 'shared/App.css';
+import styles from 'shared/App.module.css';
 import { SignUpLink } from './SignUp';
 import { PasswordForgetLink } from './PasswordForget';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
+import logo from '../images/logo.png';
 
 const SignIn = ({ history }) =>
-    <div className={styles.formWrap}>
-        <h1>SignIn</h1>
-        <SignInForm history={history} />
-        <PasswordForgetLink />
-        <SignUpLink />
+    <div className={styles.backWrap}>
+        <div className={styles.formBoxWrap}>
+            <h1><img src={logo} alt="Foodist" /></h1>
+            <div className={styles.formWrap}>
+                <SignInForm history={history} />
+                <SignUpLink />
+                <PasswordForgetLink />
+            </div>
+        </div>
     </div>
 
 const byPropKey = (propertyName, value) => () => ({
@@ -66,18 +71,25 @@ class SignInForm extends Component {
 
         return (
             <form onSubmit={this.onSubmit}>
-                <input
-                    value={email}
-                    onChange={event => this.setState(byPropKey('email', event.target.value))}
-                    type="text"
-                    placeholder="Email Address"
-                />
-                <input
-                    value={password}
-                    onChange={event => this.setState(byPropKey('password', event.target.value))}
-                    type="password"
-                    placeholder="Password"
-                />
+                <ul>
+                    <li>
+                        <input
+                            value={email}
+                            onChange={event => this.setState(byPropKey('email', event.target.value))}
+                            type="text"
+                            placeholder="Enter your e-mail"
+                        />
+                    </li>
+                    <li>
+                        <input
+                            value={password}
+                            onChange={event => this.setState(byPropKey('password', event.target.value))}
+                            type="password"
+                            placeholder="Password"
+                        />
+                    </li>
+                </ul>
+
                 <button disabled={isInvalid} type="submit">
                     Sign In
                 </button>
@@ -91,5 +103,5 @@ class SignInForm extends Component {
 export default withRouter(SignIn);
 
 export {
-    SignInForm,
+    SignInForm
 };
