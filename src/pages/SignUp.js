@@ -9,7 +9,7 @@ const SignUp = ({ history }) =>
         <h1>Sign Up</h1>
         <SignUpForm history={history} />
     </div>
-
+    
 const INITIAL_STATE = {
     nickname: '',
     email: '',
@@ -69,7 +69,7 @@ class SignUpForm extends Component {
         const isInvalid =
             password === '' ||
             email === '' ||
-            nickname === '';
+            nickname === '' && nickname.length > 10;
 
         return (
             <form onSubmit={this.onSubmit}>
