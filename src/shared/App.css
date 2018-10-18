@@ -39,6 +39,11 @@ header{
     height: 160px
 }
 
+.body{
+    max-width:1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
 .menuButton{
     float:left;
@@ -60,16 +65,53 @@ header{
     background:rgba(255,255,255,.2)
 }
 
-.body{
-    max-width:1400px;
-    margin: 0 auto;
-    padding: 0 20px;
+input{
+    width: 100%;
+    height:42px;
+    background:#fff;
+}
+
+button{
+    display: block;
+    width: 120px;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid rgba(102,102,102,.2);
+    border-radius: 5px;
+    margin-left: 20px;
+    transition: all .3s;
+}
+button:hover{
+    background:rgba(255,255,255,.2)
+}
+
+.dimWrap{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    left: 0;
+    top: 0;
 }
 
 .formWrap{
     width: 100%;
     max-width: 500px;
     margin: 50px auto;
+    background: #fff;
+    box-sizing: border-box;
+    padding: 40px;
 }
 
-input{width: 100%; height:42px; background:#fff; }
+.formWrap h1{
+    margin-bottom: 40px;
+}
+
+.formWrap li{
+    margin-bottom: 10px;
+}
+
+.formWrap button{
+    margin: 40px auto 0;
+}
