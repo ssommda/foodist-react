@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
-
+// import Loadable from 'react-loadable';
 import withAuthorization from 'components/withAuthorization';
 import { db } from '../firebase';
+import BoardList from 'pages/BoardList';
+
+// const Loading = () => {
+//     return <div>로딩중...</div>;
+// };
+//
+// export const BoardList = Loadable({
+//     loader: () => import('pages/BoardList'),
+//     loading: Loading
+// });
 
 class HomePage extends Component {
     constructor(props) {
@@ -24,6 +34,7 @@ class HomePage extends Component {
         return (
             <div>
                 {!!users && <UserList users={users}/>}
+                <BoardList />
             </div>
         );
     }

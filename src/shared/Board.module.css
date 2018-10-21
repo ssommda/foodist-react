@@ -1,0 +1,15 @@
+
+.boardList .imgWrap{
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+.boardList .imgWrap img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hidden{
+    display: none;
+}
