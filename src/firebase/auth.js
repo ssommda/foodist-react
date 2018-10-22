@@ -19,3 +19,11 @@ export const doPasswordReset = (email) =>
 // Password Change
 export const doPasswordUpdate = (password) =>
     auth.currentUser.updatePassword(password);
+
+// 현재 로그인한 사용자 체크
+export const currentUserCheck = () => {
+  var user = auth.currentUser
+  if (user != null) {
+    return user.uid;
+  }
+}

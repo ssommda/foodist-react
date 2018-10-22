@@ -6,6 +6,7 @@ class ImageUpload extends Component {
         this._handleImageChange = this._handleImageChange.bind(this);
     }
 
+    //사이즈를 줄인 이미지를 storage에 저장하기 위해 blob file로 만들기
     _dataURLtoBlob(dataurl) {
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -14,7 +15,6 @@ class ImageUpload extends Component {
         }
         return new Blob([u8arr], {type:mime});
     }
-
 
     _handleImageChange() {
 
@@ -45,14 +45,14 @@ class ImageUpload extends Component {
                 canvas.width = width;
                 canvas.height = height;
                 canvas.getContext("2d").drawImage(image, 0, 0, width, height);
-                // blob = dataURItoBlob(canvas.toDataURL());
+
                 var url = canvas.toDataURL();
                 document.getElementById("uploadPreview").src = url;
-                console.log(state._dataURLtoBlob(url));
+
                 var blob = state._dataURLtoBlob(url);
                 document.getElementById("blobImage").value = blob;
 
-                state.props.updateImage(blob);
+                state.props.updateImage(blob); //blob 파일 변경
             }
 
             image.src = event.target.result;
@@ -66,20 +66,11 @@ class ImageUpload extends Component {
             return;
         }
 
-        this.props.updateName(uploadImage.files[0].name);
-
+        this.props.updateName(uploadImage.files[0].name); //파일명 변경
         reader.readAsDataURL(uploadImage.files[0]);
-
-
     }
 
     render() {
-        // let {imagePreviewUrl} = this.state;
-        // let $imagePreview = null;
-        // if (imagePreviewUrl) {
-        //     $imagePreview = (<img src={imagePreviewUrl} alt="이미지 미리보기" />);
-        // }
-
         return (
             <div>
                 <div>
@@ -87,10 +78,6 @@ class ImageUpload extends Component {
                     <input id="uploadImage" type="file" onChange={this._handleImageChange} />
                 </div>
                 <img id="uploadPreview" alt="이미지 미리보기"/>
-
-                <div>
-                    {/*{$imagePreview}*/}
-                </div>
             </div>
         )
     }

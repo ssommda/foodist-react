@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from 'shared/App.module.css';
-import { auth } from '../firebase/index';
+import { auth } from '../firebase';
 import * as routes from '../constants/routes';
 import logo from '../images/logo.png';
 

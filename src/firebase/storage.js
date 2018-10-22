@@ -35,7 +35,7 @@ export const uploadImage = (blob, name) => {
     const metadata = {
         contentType: 'image/jpeg'
     };
-
+    name = Firebase.ServerValue.TIMESTAMP + name;
+    console.log(name);
     return storage.ref().child(name).put(blob, metadata);
 }
-

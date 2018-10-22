@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 // import styles from 'shared/Board.module.css';
-import { db, storage } from '../firebase';
+import { auth, db, storage } from '../firebase';
 import * as routes from '../constants/routes';
 import ImageUpload from 'components/ImageUpload';
 
 const BoardCreate = ({ history }) =>
-    <div>
+    <div className={styles.boardCreateWrap}>
         <h3>글작성하기</h3>
         <div>
             <BoardCreateForm history={history} />
@@ -15,12 +15,14 @@ const BoardCreate = ({ history }) =>
     </div>
 
 const INITIAL_STATE = {
+    author: '',
     title: '',
     description: '',
     rating: '',
     tags: '',
     image: '',
     imageName: '',
+    startedAt: '',
     error: null,
 };
 
@@ -37,6 +39,12 @@ class BoardCreateForm extends Component {
         this._updateImage = this._updateImage.bind(this);
     }
 
+    componentDidMount() {
+        this.setState({
+            author: auth.currentUserCheck(),
+        });
+    }
+
     _updateName(name) {
         this.setState({
             imageName: name,
@@ -49,7 +57,7 @@ class BoardCreateForm extends Component {
         });
     }
 
-    onSubmit = (event) => {
+    _onSubmit = (event) => {
         const {
             title,
             description,
@@ -63,6 +71,11 @@ class BoardCreateForm extends Component {
             history,
         } = this.props;
 
+        this.setState({
+            startedAt: Firebase.ServerValue.TIMESTAMP,
+        });
+
+        //storage에 이미지 업로드
         storage.uploadImage(image, imageName).on('state_changed', snapshot => {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
@@ -72,7 +85,8 @@ class BoardCreateForm extends Component {
                 console.log("성공")
             });
 
-        db.doCreateBoard(title, description, rating, tags, imageName)
+        //이미지 업로드 끝난 후, 작성 내용 DB 업로드
+        db.doCreateBoard(author, title, description, rating, tags, imageName, startedAt)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
                 // history.push(routes.HOME);
@@ -82,7 +96,6 @@ class BoardCreateForm extends Component {
             });
 
         event.preventDefault();
-
     }
 
 
@@ -142,7 +155,7 @@ class BoardCreateForm extends Component {
                 </div>
                 <ImageUpload updateName={this._updateName}
                              updateImage={this._updateImage} />
-                <button type="submit" onClick={this.onSubmit}>Submit</button>
+                <button type="submit" onClick={this._onSubmit}>Submit</button>
 
                 { error && <p>{error.message}</p> }
             </form>
