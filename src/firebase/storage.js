@@ -1,10 +1,10 @@
 import { storage } from './firebase';
 
-export const getImageUrl = (imageUrl, key) =>
+export const getImageUrl = (imageUrl, imageID) =>
 
-    storage.ref().child(imageUrl.imageUrl).getDownloadURL().then(function(url){
-        document.getElementById(key).src = url;
-        document.getElementById(key).className = "";
+    storage.ref().child(imageUrl).getDownloadURL().then(function(url){
+        document.getElementById(imageID).src = url;
+        document.getElementById(imageID).className = "";
     }).catch(function(error) {
 
         // A full list of error codes is available at
@@ -35,7 +35,5 @@ export const uploadImage = (blob, name) => {
     const metadata = {
         contentType: 'image/jpeg'
     };
-    name = Firebase.ServerValue.TIMESTAMP + name;
-    console.log(name);
     return storage.ref().child(name).put(blob, metadata);
 }

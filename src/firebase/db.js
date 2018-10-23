@@ -14,9 +14,10 @@ export const onceGetUsers = () =>
 
 // Board API
 
-export const doCreateBoard = (author, title, description, rating, tags, image) => {
+export const doCreateBoard = (author, title, description, rating, tags, imageName, startedAt) => {
     let key = db.ref('boards').push().key;
-    let model = {author, title, description, rating, tags, image};
+    // imageName = Date.now() + "_" + imageName;
+    let model = {author, title, description, rating, tags, imageName, startedAt};
     return db.ref('boards/'+ key).set(model);
 }
 
@@ -29,3 +30,4 @@ export const onceGetBoards = () =>
     //         var childData = childSnapshot.val();
     //     });
     // });
+

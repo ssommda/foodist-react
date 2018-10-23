@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import Loadable from 'react-loadable';
-// import withAuthorization from 'components/withAuthorization';
+import withAuthorization from 'components/withAuthorization';
 import { db } from '../firebase';
 import BoardList from 'pages/BoardList';
 
@@ -29,25 +29,25 @@ class HomePage extends Component {
     }
 
     render() {
-        const {users} = this.state;
+        // const {users} = this.state;
 
         return (
             <div>
-                {!!users && <UserList users={users}/>}
+                {/*{!!users && <UserList users={users}/>}*/}
                 <BoardList />
             </div>
         );
     }
 }
 
-const UserList = ({ users }) =>
-    <div>
-        <h2>가입자 이메일 리스트</h2>
+// const UserList = ({ users }) =>
+//     <div>
+//         <h2>가입자 이메일 리스트</h2>
+//
+//         {Object.keys(users).map(key =>
+//             <div key={key}>{users[key].email}</div>
+//         )}
+//     </div>
 
-        {Object.keys(users).map(key =>
-            <div key={key}>{users[key].email}</div>
-        )}
-    </div>
-
-// const authCondition = (authUser) => !!authUser;
-// export default withAuthorization(authCondition)(HomePage);
+const authCondition = (authUser) => !!authUser
+export default withAuthorization(authCondition)(HomePage);

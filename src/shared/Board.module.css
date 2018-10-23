@@ -1,4 +1,15 @@
 /* 리스트 */
+.boardList{
+    overflow: hidden;
+}
+.boardList li{
+    float: left;
+    width: calc(25% - 15px);
+    padding-right: 20px;
+}
+.boardList li:nth-of-type(4n){
+    padding-right: 0;
+}
 .boardList .imgWrap{
     width: 200px;
     height: 200px;
@@ -8,6 +19,9 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+.boardList .hidden{
+    display: none;
 }
 
 /* 작성 */

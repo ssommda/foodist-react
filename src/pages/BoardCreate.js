@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
-// import styles from 'shared/Board.module.css';
-import { auth, db, storage } from '../firebase';
 import * as routes from '../constants/routes';
-import ImageUpload from 'components/ImageUpload';
+import { Link } from 'react-router-dom';
 import withAuthorization from 'components/withAuthorization';
-// import TagInput from 'components/TagInput';
+import { auth, db, storage } from '../firebase';
+import ImageUpload from 'components/ImageUpload';
 import { WithContext as ReactTags } from 'react-tag-input';
+import styles from 'shared/Board.module.css';
 
 const KeyCodes = {
     comma: 188,
@@ -32,7 +31,7 @@ const INITIAL_STATE = {
     tags: [],
     image: '',
     imageName: '',
-    startedAt: '',
+    startedAt: Date.now(),
     error: null,
 };
 
@@ -47,9 +46,8 @@ class BoardCreateForm extends Component {
         this.state = { ...INITIAL_STATE };
         this._updateName = this._updateName.bind(this);
         this._updateImage = this._updateImage.bind(this);
-        this._updateTags = this._updateTags.bind(this);
-        this._handleDelete = this.handleDelete.bind(this);
-        this._handleAddition = this.handleAddition.bind(this);
+        this._handleDelete = this._handleDelete.bind(this);
+        this._handleAddition = this._handleAddition.bind(this);
     }
 
     componentDidMount() {
@@ -59,6 +57,7 @@ class BoardCreateForm extends Component {
     }
 
     _updateName(name) {
+        name = Date.now() + "_" + name;
         this.setState({
             imageName: name,
         });
@@ -70,49 +69,46 @@ class BoardCreateForm extends Component {
         });
     }
 
-    _updateTags(tags) {
-        var tagArr = [];
-        for (var i in tags) {
-            tagArr.push(tags[i].text);
-        }
-        this.setState({
-            tags: tagArr,
-        })
-    }
-
     _handleDelete(i) {
         const { tags } = this.state;
         this.setState({
             tags: tags.filter((tag, index) => index !== i),
         });
-        this.props.updateTags(this.state.tags);
     }
 
     _handleAddition(tag) {
         this.setState(state => ({ tags: [...state.tags, tag] }));
-        this.props.updateTags(this.state.tags);
     }
 
     _onSubmit = (event) => {
         const {
+            author,
             title,
             description,
             rating,
             tags,
             image,
-            imageName
+            imageName,
+            startedAt,
         } = this.state;
 
         const {
             history,
         } = this.props;
 
-        this.setState({
-            startedAt: Firebase.ServerValue.TIMESTAMP,
+        //태그 array로 변환
+        let tagArr = [];
+        for (var i in tags) {
+            tagArr.push(tags[i].text);
+        }
+
+        const promise = cb => new Promise(res => {
+            // 콜백 함수 안에서 resolve 함수를 실행해야 순서가 보장됨.
+            cb(res);
         });
 
         //storage에 이미지 업로드
-        storage.uploadImage(image, imageName).on('state_changed', snapshot => {
+        const UploadStorage = storage.uploadImage(image, imageName).on('state_changed', snapshot => {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
             }, function(error) {
@@ -121,11 +117,18 @@ class BoardCreateForm extends Component {
                 console.log("성공")
             });
 
+        (async () => {
+            await promise(UploadStorage);
+        })();
+
         //이미지 업로드 끝난 후, 작성 내용 DB 업로드
-        db.doCreateBoard(author, title, description, rating, tags, imageName, startedAt)
+        db.doCreateBoard(author, title, description, rating, tagArr, imageName, startedAt)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
-                // history.push(routes.HOME);
+                setTimeout(function(){
+                    console.log("완료");
+                    history.push(routes.HOME);
+                }, 1000);
             })
             .catch(error => {
                 this.setState(byPropKey('error', error));
@@ -189,16 +192,9 @@ class BoardCreateForm extends Component {
                     handleAddition={this._handleAddition}
                 />
                 </div>
-                // <div>
-                //     <label>tags:</label>
-                //     <input
-                //         type="text"
-                //         onChange={event => this.setState(byPropKey('tags', event.target.value))}
-                //         value={tags}
-                //         placeholder="tags" />
-                // </div>
                 <ImageUpload updateName={this._updateName}
-                             updateImage={this._updateImage} />
+                             updateImage={this._updateImage}
+                />
                 <button type="submit" onClick={this._onSubmit}>Submit</button>
 
                 { error && <p>{error.message}</p> }
