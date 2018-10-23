@@ -4,6 +4,16 @@ import {Link} from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
 import * as routes from '../constants/routes';
 import ImageUpload from 'components/ImageUpload';
+import withAuthorization from 'components/withAuthorization';
+// import TagInput from 'components/TagInput';
+import { WithContext as ReactTags } from 'react-tag-input';
+
+const KeyCodes = {
+    comma: 188,
+    enter: 13,
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 const BoardCreate = ({ history }) =>
     <div className={styles.boardCreateWrap}>
@@ -19,7 +29,7 @@ const INITIAL_STATE = {
     title: '',
     description: '',
     rating: '',
-    tags: '',
+    tags: [],
     image: '',
     imageName: '',
     startedAt: '',
@@ -37,6 +47,9 @@ class BoardCreateForm extends Component {
         this.state = { ...INITIAL_STATE };
         this._updateName = this._updateName.bind(this);
         this._updateImage = this._updateImage.bind(this);
+        this._updateTags = this._updateTags.bind(this);
+        this._handleDelete = this.handleDelete.bind(this);
+        this._handleAddition = this.handleAddition.bind(this);
     }
 
     componentDidMount() {
@@ -55,6 +68,29 @@ class BoardCreateForm extends Component {
         this.setState({
             image: image,
         });
+    }
+
+    _updateTags(tags) {
+        var tagArr = [];
+        for (var i in tags) {
+            tagArr.push(tags[i].text);
+        }
+        this.setState({
+            tags: tagArr,
+        })
+    }
+
+    _handleDelete(i) {
+        const { tags } = this.state;
+        this.setState({
+            tags: tags.filter((tag, index) => index !== i),
+        });
+        this.props.updateTags(this.state.tags);
+    }
+
+    _handleAddition(tag) {
+        this.setState(state => ({ tags: [...state.tags, tag] }));
+        this.props.updateTags(this.state.tags);
     }
 
     _onSubmit = (event) => {
@@ -146,13 +182,21 @@ class BoardCreateForm extends Component {
                     />
                 </div>
                 <div>
-                    <label>tags:</label>
-                    <input
-                        type="text"
-                        onChange={event => this.setState(byPropKey('tags', event.target.value))}
-                        value={tags}
-                        placeholder="tags" />
+                <ReactTags
+                    tags={tags}
+                    delimiters={delimiters}
+                    handleDelete={this._handleDelete}
+                    handleAddition={this._handleAddition}
+                />
                 </div>
+                // <div>
+                //     <label>tags:</label>
+                //     <input
+                //         type="text"
+                //         onChange={event => this.setState(byPropKey('tags', event.target.value))}
+                //         value={tags}
+                //         placeholder="tags" />
+                // </div>
                 <ImageUpload updateName={this._updateName}
                              updateImage={this._updateImage} />
                 <button type="submit" onClick={this._onSubmit}>Submit</button>
@@ -163,5 +207,8 @@ class BoardCreateForm extends Component {
     }
 }
 
-export default BoardCreate;
-export {BoardCreateForm};
+// export default BoardCreate;
+
+const authCondition = (authUser) => !!authUser;
+export default withAuthorization(authCondition)(BoardCreate);
+// export {BoardCreateForm};

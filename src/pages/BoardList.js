@@ -60,8 +60,4 @@ const BoardListItems = ({ boards }) =>
         )}
     </ul>
 
-
-// const authCondition = (authUser) => !!authUser;
-
-// export default withAuthorization(authCondition)(HomePage);
 export default BoardList;

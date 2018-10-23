@@ -1,4 +1,4 @@
-
+/* 리스트 */
 .boardList .imgWrap{
     width: 200px;
     height: 200px;
@@ -10,13 +10,10 @@
     object-fit: cover;
 }
 
-.hidden{
-    display: none;
-}
-
+/* 작성 */
 .boardCreateWrap{
 
 }
 .boardCreateWrap h3{
-  
+
 }

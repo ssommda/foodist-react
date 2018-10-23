@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import Loadable from 'react-loadable';
-import withAuthorization from 'components/withAuthorization';
+// import withAuthorization from 'components/withAuthorization';
 import { db } from '../firebase';
 import BoardList from 'pages/BoardList';
 
@@ -49,6 +49,5 @@ const UserList = ({ users }) =>
         )}
     </div>
 
-const authCondition = (authUser) => !!authUser;
-
-export default withAuthorization(authCondition)(HomePage);
+// const authCondition = (authUser) => !!authUser;
+// export default withAuthorization(authCondition)(HomePage);

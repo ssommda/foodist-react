@@ -79,7 +79,7 @@ class ImageUpload extends Component {
                 </div>
                 <img id="uploadPreview" alt="이미지 미리보기"/>
             </div>
-        )
+        );
     }
 
 }
