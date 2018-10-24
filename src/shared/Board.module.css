@@ -10,15 +10,27 @@
 .boardList li:nth-of-type(4n){
     padding-right: 0;
 }
+.boardList li a{
+  display: block;
+  position: relative;
+}
 .boardList .imgWrap{
     width: 200px;
     height: 200px;
     overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 .boardList .imgWrap img{
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+.boardList .textWrap{
+  background: #fff;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 .boardList .hidden{
     display: none;
@@ -29,5 +41,17 @@
 
 }
 .boardCreateWrap h3{
+
+}
+
+/* 반응형 미디어쿼리 */
+@media screen and (max-width: 640px) {
+    .boardList li{
+        width: 100%;
+        padding: 20px;
+    }
+    .boardList li:nth-of-type(4n){
+        padding-right: 20px;
+    }
 
 }

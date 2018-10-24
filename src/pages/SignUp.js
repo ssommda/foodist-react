@@ -15,7 +15,7 @@ const SignUp = ({ history }) =>
             </div>
         </div>
     </div>
-    
+
 const INITIAL_STATE = {
     nickname: '',
     email: '',
@@ -33,7 +33,7 @@ class SignUpForm extends Component {
         this.state = { ...INITIAL_STATE };
     }
 
-    onSubmit = (event) => {
+    _onSubmit = (event) => {
         const {
             nickname,
             email,
@@ -78,7 +78,7 @@ class SignUpForm extends Component {
             nickname === '' || nickname.length > 10;
 
         return (
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this._onSubmit}>
                 <ul>
                     <li>
                         <input

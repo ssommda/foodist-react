@@ -24,6 +24,6 @@ export const doPasswordUpdate = (password) =>
 export const currentUserCheck = () => {
   var user = auth.currentUser
   if (user != null) {
-    return user.uid;
+    return user.email;
   }
 }

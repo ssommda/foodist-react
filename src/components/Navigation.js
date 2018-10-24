@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import AuthUserContext from './AuthUserContext';
-import SignOutButton from './SignOut';
 import * as routes from '../constants/routes';
 import styles from 'shared/App.module.css';
 
@@ -18,8 +17,8 @@ const Navigation = () =>
 const NavigationAuth = () =>
     <ul className={styles.navMenu}>
         <li className={styles.menuButton}><Link to={routes.HOME}>Home</Link></li>
+        <li className={styles.menuButton}><Link to={routes.BOARD_CREATE}>Create</Link></li>
         <li className={styles.menuButton}><Link to={routes.ACCOUNT}>Account</Link></li>
-        <li className={styles.menuButton}><SignOutButton /></li>
     </ul>
 
 const NavigationNonAuth = () =>

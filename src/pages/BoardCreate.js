@@ -4,15 +4,16 @@ import { Link } from 'react-router-dom';
 import withAuthorization from 'components/withAuthorization';
 import { auth, db, storage } from '../firebase';
 import ImageUpload from 'components/ImageUpload';
+import StarRating from 'components/StarRating';
 import { WithContext as ReactTags } from 'react-tag-input';
 import styles from 'shared/Board.module.css';
 
 const KeyCodes = {
-    comma: 188,
     enter: 13,
+    space: 32,
 };
 
-const delimiters = [KeyCodes.comma, KeyCodes.enter];
+const delimiters = [KeyCodes.space, KeyCodes.enter];
 
 const BoardCreate = ({ history }) =>
     <div className={styles.boardCreateWrap}>
@@ -23,15 +24,33 @@ const BoardCreate = ({ history }) =>
         <Link to={routes.HOME}>목록으로</Link>
     </div>
 
+const getToday = () => {
+  let today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = today.getMonth() + 1;
+  const dd = today.getDate();
+  if(mm<10){
+      mm='0'+mm;
+  }
+  if(dd<10){
+      dd='0'+dd;
+  }
+  today = yyyy + "-" + mm + "-" + dd;
+  return today
+};
+
+
 const INITIAL_STATE = {
     author: '',
+    nickname: '',
     title: '',
     description: '',
-    rating: '',
+    rating: 5.0,
     tags: [],
     image: '',
     imageName: '',
-    startedAt: Date.now(),
+    startedAt: new Date(),
+    dateWithFormat: getToday(),
     error: null,
 };
 
@@ -51,8 +70,12 @@ class BoardCreateForm extends Component {
     }
 
     componentDidMount() {
+        const loginUserEmail = auth.currentUserCheck();
+        const loginUserNickname = db.onceGetUsernickname(loginUserId);
+
         this.setState({
             author: auth.currentUserCheck(),
+            nickname: loginUserNickname,
         });
     }
 
@@ -77,7 +100,21 @@ class BoardCreateForm extends Component {
     }
 
     _handleAddition(tag) {
+        if(this.state.tags.length > 5) {
+          alert("태그는 5개 이상 입력할 수 없습니다.");
+          return false;
+        }
         this.setState(state => ({ tags: [...state.tags, tag] }));
+    }
+
+    _onStarClickHalfStar(nextValue, prevValue, name, e) {
+        const xPos = (e.pageX - e.currentTarget.getBoundingClientRect().left) / e.currentTarget.offsetWidth;
+        if (xPos <= 0.5) {
+            nextValue -= 0.5;
+        }
+        console.log('name: %s, nextValue: %s, prevValue: %s', name, nextValue, prevValue);
+        // console.log(e);
+        this.setState({rating: nextValue});
     }
 
     _onSubmit = (event) => {
@@ -90,6 +127,7 @@ class BoardCreateForm extends Component {
             image,
             imageName,
             startedAt,
+            dateWithFormat,
         } = this.state;
 
         const {
@@ -102,9 +140,9 @@ class BoardCreateForm extends Component {
             tagArr.push(tags[i].text);
         }
 
-        const promise = cb => new Promise(res => {
+        const promise = cb => new Promise(response => {
             // 콜백 함수 안에서 resolve 함수를 실행해야 순서가 보장됨.
-            cb(res);
+            cb(response);
         });
 
         //storage에 이미지 업로드
@@ -122,13 +160,13 @@ class BoardCreateForm extends Component {
         })();
 
         //이미지 업로드 끝난 후, 작성 내용 DB 업로드
-        db.doCreateBoard(author, title, description, rating, tagArr, imageName, startedAt)
+        db.doCreateBoard(author, nickname, title, description, rating, tagArr, imageName, startedAt, dateWithFormat)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
-                setTimeout(function(){
+                // setTimeout(function(){
                     console.log("완료");
                     history.push(routes.HOME);
-                }, 1000);
+                // }, 1000);
             })
             .catch(error => {
                 this.setState(byPropKey('error', error));
@@ -137,24 +175,23 @@ class BoardCreateForm extends Component {
         event.preventDefault();
     }
 
-
     render() {
         const {
             title,
-            description,
             rating,
             tags,
+            image,
             error,
         } = this.state;
 
-        // const isInvalid =
-        //     title === '' ||
-        //     author === '' ||
-        //     rating === '' ||
-        //     tags === '';
+        const isInvalid =
+            title === '' ||
+            rating === '' ||
+            tags === '' ||
+            image === '';
 
         return (
-            <form>
+            <form onSubmit={this._onSubmit}>
                 <div>
                     <label>Title:</label>
                     <input
@@ -177,25 +214,49 @@ class BoardCreateForm extends Component {
                 </div>
                 <div>
                     <label>rating:</label>
-                    <input
-                        type="text"
-                        onChange={event => this.setState(byPropKey('rating', event.target.value))}
-                        value={rating}
-                        placeholder="Rating"
+                    // <input
+                    //     type="text"
+                    //     onChange={event => this.setState(byPropKey('rating', event.target.value))}
+                    //     value={rating}
+                    //     placeholder="Rating"
+                    // />
+                    <span>{this.state.rating}</span>
+                    <StarRatingComponent
+                      name="rating"
+                      starColor="#ffb400"
+                      emptyStarColor="#ffb400"
+                      value={this.state.rating}
+                      onStarClick={this._onStarClickHalfStar.bind(this)}
+                      renderStarIcon={(index, value) => {
+                        return (
+                          <span>
+                            <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
+                          </span>
+                        );
+                      }}
+                      renderStarIconHalf={() => {
+                        return (
+                          <span>
+                            <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
+                            <span><i className="fas fa-star-half" /></span>
+                          </span>
+                        );
+                      }} />
+                </div>
+                <div>
+                    <ReactTags
+                        tags={tags}
+                        delimiters={delimiters}
+                        handleDelete={this._handleDelete}
+                        handleAddition={this._handleAddition}
                     />
                 </div>
                 <div>
-                <ReactTags
-                    tags={tags}
-                    delimiters={delimiters}
-                    handleDelete={this._handleDelete}
-                    handleAddition={this._handleAddition}
-                />
-                </div>
-                <ImageUpload updateName={this._updateName}
+                    <ImageUpload updateName={this._updateName}
                              updateImage={this._updateImage}
-                />
-                <button type="submit" onClick={this._onSubmit}>Submit</button>
+                    />
+                </div>
+                <button disabled={isInvalid} type="submit">Submit</button>
 
                 { error && <p>{error.message}</p> }
             </form>

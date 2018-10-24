@@ -36,7 +36,7 @@ class SignInForm extends Component {
         this.state = { ...INITIAL_STATE };
     }
 
-    onSubmit = (event) => {
+    _onSubmit = (event) => {
         const {
             email,
             password,
@@ -70,7 +70,7 @@ class SignInForm extends Component {
             email === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this._onSubmit}>
                 <ul>
                     <li>
                         <input
