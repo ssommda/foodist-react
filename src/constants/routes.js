@@ -9,3 +9,4 @@ export const PASSWORD_FORGET = '/pw-forget';
 //Boards
 export const BOARD_LIST = '/board-list';
 export const BOARD_CREATE = '/board-create';
+export const BOARD_DETAIL = '/board-detail';

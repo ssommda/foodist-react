@@ -11,16 +11,16 @@
     padding-right: 0;
 }
 .boardList li a{
-  display: block;
-  position: relative;
+  /*display: block;*/
+  /*position: relative;*/
 }
 .boardList .imgWrap{
     width: 200px;
     height: 200px;
     overflow: hidden;
-    position: absolute;
-    left: 0;
-    top: 0;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*top: 0;*/
 }
 .boardList .imgWrap img{
     width: 100%;
@@ -29,8 +29,8 @@
 }
 .boardList .textWrap{
   background: #fff;
-  margin-left: 20px;
-  margin-top: 20px;
+  /*margin-left: 20px;*/
+  /*margin-top: 20px;*/
 }
 .boardList .hidden{
     display: none;

@@ -8,9 +8,8 @@ const BoardImage = (props) => {
     const imageUrl = props.url,
         imageID = props.name,
         img = <img className={styles.hidden} id={imageID} alt="이미지" />;
-
     storage.getImageUrl(imageUrl, imageID);
-    return img
+    return img;
 }
 
 class BoardList extends Component {
@@ -48,22 +47,33 @@ class BoardList extends Component {
 const BoardListItems = ({ boards }) =>
     Object.keys(boards).map((key, index) =>
         <li key={key}>
-            <Link to={`/BoardDetail/${boards.key}`}>
+            <Link to={`/board-detail/${key}`}>
                 <div className={styles.imgWrap}>
                     <BoardImage url={boards[key].imageName} name={index + key} />
                 </div>
                 <div className={styles.textWrap}>
-                  <h3>{boards[key].title}</h3>
-                  // <p className={styles.author}>{boards[key].author}</p>
-                  <p className={styles.author}>{boards[key].nickname}</p>
-                  // <p className={styles.rating}>{boards[key].rating}</p>
-                  <StarRatingComponent
-                      name="rating"
-                      editing={false}
-                      starCount={5}
-                      value={boards[key].rating}
-                  />
-                  // <p className={styles.description}>{boards[key].description}</p>
+                    <h3>{boards[key].title}</h3>
+                    <p className={styles.author}>{boards[key].nickname}</p>
+                    <StarRating
+                    name="rating"
+                    starColor="#ffb400"
+                    emptyStarColor="#ffb400"
+                    value={boards[key].rating}
+                    renderStarIcon={(index, value) => {
+                        return (
+                            <span>
+                                <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
+                            </span>
+                        );
+                    }}
+                    renderStarIconHalf={() => {
+                        return (
+                            <span>
+                                <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
+                                <span><i className="fas fa-star-half" /></span>
+                            </span>
+                        );
+                    }}/>
                   <div>
                       {boards[key].tags.map((tag, index) =>
                           <span key={index}># {tag}</span>

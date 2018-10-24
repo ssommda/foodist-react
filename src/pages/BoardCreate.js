@@ -25,18 +25,18 @@ const BoardCreate = ({ history }) =>
     </div>
 
 const getToday = () => {
-  let today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = today.getMonth() + 1;
-  const dd = today.getDate();
-  if(mm<10){
-      mm='0'+mm;
-  }
-  if(dd<10){
-      dd='0'+dd;
-  }
-  today = yyyy + "-" + mm + "-" + dd;
-  return today
+    let today = new Date();
+    let yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1;
+    let dd = today.getDate();
+    if(mm<10){
+        mm='0'+mm;
+    }
+    if(dd<10){
+        dd='0'+dd;
+    }
+    today = yyyy + "-" + mm + "-" + dd;
+    return today
 };
 
 
@@ -70,12 +70,18 @@ class BoardCreateForm extends Component {
     }
 
     componentDidMount() {
+        const _this = this;
         const loginUserEmail = auth.currentUserCheck();
-        const loginUserNickname = db.onceGetUsernickname(loginUserId);
+        db.onceGetUsernickname(loginUserEmail).then(snapshot => {
+            snapshot.forEach(function(childSnapshot) {
+                const childData = childSnapshot.val();
+                const nickname = childData.nickname;
 
-        this.setState({
-            author: auth.currentUserCheck(),
-            nickname: loginUserNickname,
+                _this.setState({
+                    author: loginUserEmail,
+                    nickname: nickname,
+                });
+            });
         });
     }
 
@@ -120,6 +126,7 @@ class BoardCreateForm extends Component {
     _onSubmit = (event) => {
         const {
             author,
+            nickname,
             title,
             description,
             rating,
@@ -178,6 +185,7 @@ class BoardCreateForm extends Component {
     render() {
         const {
             title,
+            description,
             rating,
             tags,
             image,
@@ -214,34 +222,35 @@ class BoardCreateForm extends Component {
                 </div>
                 <div>
                     <label>rating:</label>
-                    // <input
-                    //     type="text"
-                    //     onChange={event => this.setState(byPropKey('rating', event.target.value))}
-                    //     value={rating}
-                    //     placeholder="Rating"
-                    // />
+                    {/*<input*/}
+                        {/*type="text"*/}
+                        {/*onChange={event => this.setState(byPropKey('rating', event.target.value))}*/}
+                        {/*value={rating}*/}
+                        {/*placeholder="Rating"*/}
+                    {/*/>*/}
                     <span>{this.state.rating}</span>
-                    <StarRatingComponent
-                      name="rating"
-                      starColor="#ffb400"
-                      emptyStarColor="#ffb400"
-                      value={this.state.rating}
-                      onStarClick={this._onStarClickHalfStar.bind(this)}
-                      renderStarIcon={(index, value) => {
-                        return (
-                          <span>
-                            <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
-                          </span>
-                        );
-                      }}
-                      renderStarIconHalf={() => {
-                        return (
-                          <span>
-                            <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
-                            <span><i className="fas fa-star-half" /></span>
-                          </span>
-                        );
-                      }} />
+                    <StarRating
+                        name="rating"
+                        starColor="#ffb400"
+                        emptyStarColor="#ffb400"
+                        value={this.state.rating}
+                        onStarClick={this._onStarClickHalfStar.bind(this)}
+                        renderStarIcon={(index, value) => {
+                            return (
+                                <span>
+                                    <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
+                                </span>
+                            );
+                        }}
+                        renderStarIconHalf={() => {
+                            return (
+                                <span>
+                                    <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
+                                    <span><i className="fas fa-star-half" /></span>
+                                </span>
+                            );
+                        }}
+                    />
                 </div>
                 <div>
                     <ReactTags

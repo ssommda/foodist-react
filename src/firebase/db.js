@@ -11,23 +11,8 @@ export const doCreateUser = (id, nickname, email) =>
 export const onceGetUsers = () =>
     db.ref('users').once('value');
 
-export const onceGetUsernickname = (loginEmail) => {
-    const nickname
-    db.ref('users').orderByChild("email").equalTo(loginEmail).on('value', function (snapshot) {
-        //snapshot would have list of NODES that satisfies the condition
-        console.log(snapshot.val())
-        nickname = snapshot.val();
-        console.log('-----------');
-        //go through each item found and print out the emails
-        snapshot.forEach(function(childSnapshot) {
-            // var key = childSnapshot.key;
-            var childData = childSnapshot.val();
-            //this will be the actual email value found
-            console.log(childData.nickname);
-        }
-    });
-    return nickname;
-}
+export const onceGetUsernickname = (loginEmail) =>
+    db.ref('users').orderByChild("email").equalTo(loginEmail).once('value');
 
 
 // Board API
@@ -42,9 +27,6 @@ export const doCreateBoard = (author, nickname, title, description, rating, tags
 
 export const onceGetBoards = () =>
     db.ref('boards').once('value');
-    // db.ref('boards').once('value', function(snapshot) {
-    //     snapshot.forEach(function(childSnapshot) {
-    //         var childKey = childSnapshot.key;
-    //         var childData = childSnapshot.val();
-    //     });
-    // });
+
+export const onceGetBoardDetail = (id) =>
+    db.ref('boards/' + id).once('value');

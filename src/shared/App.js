@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Home, SignUp, SignIn, PasswordForget, Account, BoardList, BoardCreate } from 'pages';
+import { Home, SignUp, SignIn, PasswordForget, Account, BoardList, BoardCreate, BoardDetail } from 'pages';
 import Logo from "components/Logo";
 import Navigation from 'components/Navigation';
 // import SignOutButton from 'components/SignOut';
@@ -46,6 +46,7 @@ class App extends Component {
                     <Route path={routes.PASSWORD_FORGET} component={PasswordForget}/>
                     <Route path={routes.BOARD_LIST} component={BoardList}/>
                     <Route path={routes.BOARD_CREATE} component={BoardCreate}/>
+                    <Route path='/board-detail/:id' component={BoardDetail}/>
                 </div>
             </div>
         );

@@ -9,3 +9,4 @@ export { default as PasswordForget } from './PasswordForget';
 //Boards
 export { default as BoardList } from './BoardList';
 export { default as BoardCreate } from './BoardCreate';
+export { default as BoardDetail } from './BoardDetail';
