@@ -55,6 +55,17 @@
 
 }
 
+/* 상세 */
+
+.boardDetailWrap .imgWrap span{
+    display: block;
+    width: 200px;
+    height: 200px;
+    background-image: url(../images/img_default.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
 /* 반응형 미디어쿼리 */
 @media screen and (max-width: 640px) {
     .boardList li{
