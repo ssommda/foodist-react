@@ -5,6 +5,19 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta http-equiv="Expires" content="Mon, 06 Jan 1990 00:00:01 GMT">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    
+    <!-- - Expires : 본 문서가 content에 지정된 시간부터 유효하지 않음(캐시만료)을 알려주는 기능을 합니다.
+    - content 항목이 -1이면 조건부 캐쉬만료를 의미합니다.
+    - Mon, 06 Jan 1990 00:00:01 GMT : 만료날짜를 그리니치 시간으로 적습니다.
+    - Pragma : content 항목인 "no-cache" 명령어를 전달합니다. 즉, 캐시 기능을 하지말라는 뜻입니다.
+    - Cache-Control : 캐시를 제어하기 위한 기능입니다. content에 'no-cache'라고 적혀있기 때문에 cache를 하지 않습니다.
+    - Pragma와 Chache-Control의 문제점 : 인터넷 익스플러어 5.0 혹은 HTTP1.0에서는 여러가지 경우에 따라 동작하지 않을 수 있다고 합니다. 또한 웹서버의 제어에 따라 동작하지 않을 수 있습니다. -->
+
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/

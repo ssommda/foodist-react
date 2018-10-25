@@ -7,7 +7,7 @@ import StarRating from 'components/StarRating';
 const BoardImage = (props) => {
     const imageUrl = props.url,
         imageID = props.name,
-        img = <img className={styles.hidden} id={imageID} alt="이미지" />;
+        img = <span id={imageID}></span>;
     storage.getImageUrl(imageUrl, imageID);
     return img;
 }
@@ -22,14 +22,21 @@ class BoardList extends Component {
         };
     }
 
-    componentDidMount() {
-        db.onceGetBoards().then(snapshot =>
-            this.setState({
-                boards: snapshot.val()
-            })
-        );
+    conponentWillMount() {
+      db.onceGetBoards().then(snapshot =>
+          this.setState({
+              boards: snapshot.val()
+          })
+      );
     }
 
+    // componentDidMount() {
+    //     db.onceGetBoards().then(snapshot =>
+    //         this.setState({
+    //             boards: snapshot.val()
+    //         })
+    //     );
+    // }
 
     render() {
         const {boards} = this.state;

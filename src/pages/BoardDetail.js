@@ -8,7 +8,7 @@ import styles from 'shared/Board.module.css';
 const BoardImage = (props) => {
     const imageUrl = props.url,
         imageID = props.name,
-        img = <img className={styles.hidden} id={imageID} alt="이미지" />;
+        img = <span id={imageID}></span>;
     storage.getImageUrl(imageUrl, imageID);
     return img;
 }
