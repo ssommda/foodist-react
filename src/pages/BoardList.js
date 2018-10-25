@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { db, storage } from '../firebase';
-import styles from 'shared/Board.module.css';
+import { db } from '../firebase';
 import StarRating from 'components/StarRating';
+import BoardImage from 'components/BoardImage';
+import styles from 'shared/Board.module.css';
 
-const BoardImage = (props) => {
-    const imageUrl = props.url,
-        imageID = props.name,
-        img = <span id={imageID}></span>;
-    storage.getImageUrl(imageUrl, imageID);
-    return img;
-}
+// const BoardImage = (props) => {
+//     const imageUrl = props.url,
+//         imageID = props.name,
+//         img = <span id={imageID}></span>;
+//     storage.getImageUrl(imageUrl, imageID);
+//     return img;
+// }
+
 
 class BoardList extends Component {
 
@@ -22,7 +24,7 @@ class BoardList extends Component {
         };
     }
 
-    conponentWillMount() {
+    componentWillMount() {
       db.onceGetBoards().then(snapshot =>
           this.setState({
               boards: snapshot.val()

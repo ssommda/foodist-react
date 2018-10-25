@@ -7,8 +7,9 @@
     float: left;
     width: calc(33.3% - 20px);
     padding-right: 20px;
+    margin-bottom: 50px;
 }
-.boardList li:nth-of-type(4n){
+.boardList li:nth-of-type(3n){
     padding-right: 0;
 }
 .boardList li a{
@@ -60,7 +61,7 @@
         width: 100%;
         padding: 20px;
     }
-    .boardList li:nth-of-type(4n){
+    .boardList li:nth-of-type(3n){
         padding-right: 20px;
     }
 

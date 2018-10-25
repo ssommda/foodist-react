@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import * as routes from '../constants/routes';
 import { Link } from 'react-router-dom';
-import { db, storage } from '../firebase';
+import { db } from '../firebase';
 import StarRating from 'components/StarRating';
+import BoardImage from 'components/BoardImage';
 import styles from 'shared/Board.module.css';
 
-const BoardImage = (props) => {
-    const imageUrl = props.url,
-        imageID = props.name,
-        img = <span id={imageID}></span>;
-    storage.getImageUrl(imageUrl, imageID);
-    return img;
-}
+// const BoardImage = (props) => {
+//     const imageUrl = props.url,
+//         imageID = props.name,
+//         img = <span id={imageID}></span>;
+//     storage.getImageUrl(imageUrl, imageID);
+//     return img;
+// }
 
 class BoardDetail extends Component {
 
@@ -24,7 +25,7 @@ class BoardDetail extends Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const {id} = this.props.match.params;
         const _this = this;
 
@@ -62,9 +63,10 @@ class BoardDetail extends Component {
             <div className={styles.boardDetailWrap}>
                 <Link to={routes.HOME}>목록으로</Link>
                 <div>
-                {imageName &&
                     <BoardImage url={imageName} name={imageName} />
-                }
+                    {/*{imageName &&*/}
+                        {/*<BoardImage url={imageName} name={imageName} />*/}
+                    {/*}*/}
                 </div>
                 <h3>{title}</h3>
                 <div>

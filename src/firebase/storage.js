@@ -1,7 +1,6 @@
 import { storage } from './firebase';
 
 export const getImageUrl = (imageUrl, imageID) =>
-
     storage.ref().child(imageUrl).getDownloadURL().then(function(url){
       document.getElementById(imageID).style.backgroundImage = "url(" + url + ")";
         // document.getElementById(imageID).src = url;
