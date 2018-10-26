@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import * as routes from '../constants/routes';
 import { Link } from 'react-router-dom';
-import withAuthorization from 'components/withAuthorization';
 import { auth, db, storage } from '../firebase';
+import withAuthorization from 'components/withAuthorization';
 import ImageUpload from 'components/ImageUpload';
 import StarRating from 'components/StarRating';
 import { WithContext as ReactTags } from 'react-tag-input';
@@ -17,11 +17,10 @@ const delimiters = [KeyCodes.space, KeyCodes.enter];
 
 const BoardCreate = ({ history }) =>
     <div className={styles.boardCreateWrap}>
-        <h3>글작성하기</h3>
         <div>
             <BoardCreateForm history={history} />
         </div>
-        <Link to={routes.HOME}>목록으로</Link>
+        <Link className={styles.subBtn} to={routes.HOME}>목록으로</Link>
     </div>
 
 const getToday = () => {
@@ -83,6 +82,7 @@ class BoardCreateForm extends Component {
                 });
             });
         });
+        document.getElementById("title").focus();
     }
 
     _updateName(name) {
@@ -201,70 +201,64 @@ class BoardCreateForm extends Component {
         return (
             <form onSubmit={this._onSubmit}>
                 <div>
-                    <label>Title:</label>
-                    <input
-                        type="text"
-                        onChange={event => this.setState(byPropKey('title', event.target.value))}
-                        name="title"
-                        value={title}
-                        placeholder="Title"
-                    />
-                </div>
-                <div>
-                    <label>Description:</label>
-                    <textarea
-                        onChange={event => this.setState(byPropKey('description', event.target.value))}
-                        placeholder="Description"
-                        cols="80"
-                        rows="3"
-                        value={description}
-                    >{description}</textarea>
-                </div>
-                <div>
-                    <label>rating:</label>
-                    {/*<input*/}
-                        {/*type="text"*/}
-                        {/*onChange={event => this.setState(byPropKey('rating', event.target.value))}*/}
-                        {/*value={rating}*/}
-                        {/*placeholder="Rating"*/}
-                    {/*/>*/}
-                    <span>{this.state.rating}</span>
-                    <StarRating
-                        name="rating"
-                        starColor="#ffb400"
-                        emptyStarColor="#ffb400"
-                        value={this.state.rating}
-                        onStarClick={this._onStarClickHalfStar.bind(this)}
-                        renderStarIcon={(index, value) => {
-                            return (
-                                <span>
-                                    <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
-                                </span>
-                            );
-                        }}
-                        renderStarIconHalf={() => {
-                            return (
-                                <span>
-                                    <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
-                                    <span><i className="fas fa-star-half" /></span>
-                                </span>
-                            );
-                        }}
-                    />
-                </div>
-                <div>
-                    <ReactTags
-                        tags={tags}
-                        delimiters={delimiters}
-                        handleDelete={this._handleDelete}
-                        handleAddition={this._handleAddition}
-                    />
-                </div>
-                <div>
                     <ImageUpload updateName={this._updateName}
                              updateImage={this._updateImage}
                     />
                 </div>
+                <ul>
+                    <li>
+                        <input
+                            type="text"
+                            onChange={event => this.setState(byPropKey('title', event.target.value))}
+                            name="title"
+                            value={title}
+                            placeholder="Title"
+                            id="title"
+                        />
+                    </li>
+                    <li>
+                        <StarRating
+                            name="rating"
+                            starColor="#ffb400"
+                            emptyStarColor="#ffb400"
+                            value={this.state.rating}
+                            onStarClick={this._onStarClickHalfStar.bind(this)}
+                            renderStarIcon={(index, value) => {
+                                return (
+                                    <span>
+                                        <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
+                                    </span>
+                                );
+                            }}
+                            renderStarIconHalf={() => {
+                                return (
+                                    <span>
+                                        <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
+                                        <span><i className="fas fa-star-half" /></span>
+                                    </span>
+                                );
+                            }}
+                        />
+                        <span>{this.state.rating}</span>
+                    </li>
+                    <li className={styles.tagWrap}>
+                        <ReactTags
+                            tags={tags}
+                            delimiters={delimiters}
+                            handleDelete={this._handleDelete}
+                            handleAddition={this._handleAddition}
+                        />
+                    </li>
+                    <li>
+                        <textarea
+                            onChange={event => this.setState(byPropKey('description', event.target.value))}
+                            placeholder="Description"
+                            cols="80"
+                            rows="3"
+                            value={description}
+                        >{description}</textarea>
+                    </li>
+                </ul>
                 <button disabled={isInvalid} type="submit">Submit</button>
 
                 { error && <p>{error.message}</p> }

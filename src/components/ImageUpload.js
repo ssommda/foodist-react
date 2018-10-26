@@ -47,7 +47,7 @@ class ImageUpload extends Component {
                 canvas.getContext("2d").drawImage(image, 0, 0, width, height);
 
                 var url = canvas.toDataURL();
-                document.getElementById("uploadPreview").src = url;
+                document.getElementById("uploadPreview").style.backgroundImage = "url(" + url + ")";
 
                 var blob = state._dataURLtoBlob(url);
                 document.getElementById("blobImage").value = blob;
@@ -72,12 +72,11 @@ class ImageUpload extends Component {
 
     render() {
         return (
-            <div>
-                <div>
-                    <input id="blobImage" type="hidden" />
-                    <input id="uploadImage" type="file" onChange={this._handleImageChange} />
-                </div>
-                <img id="uploadPreview" alt="이미지 미리보기"/>
+            <div className={styles.uploadImageForm}>
+                <input id="blobImage" type="hidden" />
+                <input id="uploadImage" type="file" onChange={this._handleImageChange} />
+                <label for="uploadImage"></label> 
+                <span id="uploadPreview"></span>
             </div>
         );
     }

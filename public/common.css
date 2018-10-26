@@ -14,6 +14,7 @@ body,th,td,input,select,textarea,button {font-size:14px;line-height:1.5;font-fam
 a {color:#000;text-decoration:none;}
 a:active, a:hover {text-decoration:none}
 a[href^=tel] {text-decoration:inherit;color: inherit;}
+*:focus {outline:none}
 
 input{width: 100%; border: 0; height: 44px}
 input[type='text'],input[type='password'],input[type='submit'],input[type='search'] {-webkit-appearance:none; -webkit-border-radius:1px;}

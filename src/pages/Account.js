@@ -1,5 +1,4 @@
 import React from 'react';
-
 import AuthUserContext from 'components/AuthUserContext';
 import PasswordChangeForm from 'components/PasswordChange';
 import withAuthorization from 'components/withAuthorization';

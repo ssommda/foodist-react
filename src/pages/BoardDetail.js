@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import * as routes from '../constants/routes';
 import { Link } from 'react-router-dom';
-import { db, storage} from '../firebase';
+import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import styles from 'shared/Board.module.css';
-
-// const BoardImage = (props) => {
-//     const imageUrl = props.url,
-//         imageID = props.name,
-//         img = <span id={imageID}></span>;
-//     storage.getImageUrl(imageUrl, imageID);
-//     return img;
-// };
 
 class BoardDetail extends Component {
 

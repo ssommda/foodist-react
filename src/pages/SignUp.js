@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import styles from 'shared/App.module.css';
-import { auth, db } from '../firebase';
 import * as routes from '../constants/routes';
+import {Link, withRouter} from 'react-router-dom';
+import { auth, db } from '../firebase';
+import styles from 'shared/App.module.css';
 import logo from '../images/logo.png';
 
 const SignUp = ({ history }) =>

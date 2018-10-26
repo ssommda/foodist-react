@@ -111,7 +111,6 @@ img{
     margin: 30px auto 20px;
     padding: 0 35px;
 }
-
 .formWrap .subBtn{
     font-weight: bold;
     color: #2b4993;
@@ -130,10 +129,6 @@ img{
 }
 
 @media screen and (max-width: 768px) {
-
-}
-
-@media screen and (max-width: 640px) {
     .backWrap{
         padding: 40px 20px;
         display: block;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import * as routes from '../constants/routes';
 import { withRouter } from 'react-router-dom';
-import styles from 'shared/App.module.css';
+import { auth } from '../firebase';
 import { SignUpLink } from './SignUp';
 import { PasswordForgetLink } from './PasswordForget';
-import { auth } from '../firebase';
-import * as routes from '../constants/routes';
+import styles from 'shared/App.module.css';
 import logo from '../images/logo.png';
 
 const SignIn = ({ history }) =>

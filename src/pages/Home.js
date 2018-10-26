@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import Loadable from 'react-loadable';
-import withAuthorization from 'components/withAuthorization';
 import { db } from '../firebase';
+import withAuthorization from 'components/withAuthorization';
 import BoardList from 'pages/BoardList';
 
 // const Loading = () => {
