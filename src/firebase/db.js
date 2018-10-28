@@ -19,14 +19,24 @@ export const onceGetUsernickname = (loginEmail) =>
 
 export const doCreateBoard = (author, nickname, title, description, rating, tags, imageName, startedAt, dateWithFormat) => {
     let key = db.ref('boards').push().key;
-    // imageName = Date.now() + "_" + imageName;
     let model = {author, nickname, title, description, rating, tags, imageName, startedAt, dateWithFormat};
     return db.ref('boards/'+ key).set(model);
 }
-
 
 export const onceGetBoards = () =>
     db.ref('boards').once('value');
 
 export const onceGetBoardDetail = (id) =>
     db.ref('boards/' + id).once('value');
+
+
+// Comment API
+
+export const doRegComment = (boardKey, nickname, contents, rating, startedAt, dateWithFormat) => {
+    let key = db.ref('comments').push().key;
+    let model = {boardKey, nickname, contents, rating, startedAt, dateWithFormat};
+    return db.ref('comments/'+ key).set(model);
+}
+
+export const onceGetComments = (key) =>
+    db.ref('comments').orderByChild("boardKey").equalTo(key).once('value');

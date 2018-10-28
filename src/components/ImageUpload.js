@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styles from 'shared/App.module.css';
 
 class ImageUpload extends Component {
     constructor(props) {
@@ -46,10 +47,10 @@ class ImageUpload extends Component {
                 canvas.height = height;
                 canvas.getContext("2d").drawImage(image, 0, 0, width, height);
 
-                var url = canvas.toDataURL();
+                const url = canvas.toDataURL();
                 document.getElementById("uploadPreview").style.backgroundImage = "url(" + url + ")";
 
-                var blob = state._dataURLtoBlob(url);
+                const blob = state._dataURLtoBlob(url);
                 document.getElementById("blobImage").value = blob;
 
                 state.props.updateImage(blob); //blob 파일 변경
@@ -72,11 +73,11 @@ class ImageUpload extends Component {
 
     render() {
         return (
-            <div className={styles.uploadImageForm}>
+            <div className={styles.imgWrap}>
                 <input id="blobImage" type="hidden" />
                 <input id="uploadImage" type="file" onChange={this._handleImageChange} />
-                <label for="uploadImage"></label> 
                 <span id="uploadPreview"></span>
+                <label htmlFor="uploadImage"></label>
             </div>
         );
     }

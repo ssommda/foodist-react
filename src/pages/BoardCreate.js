@@ -6,7 +6,7 @@ import withAuthorization from 'components/withAuthorization';
 import ImageUpload from 'components/ImageUpload';
 import StarRating from 'components/StarRating';
 import { WithContext as ReactTags } from 'react-tag-input';
-import styles from 'shared/Board.module.css';
+import styles from 'shared/App.module.css';
 
 const KeyCodes = {
     enter: 13,
@@ -16,11 +16,15 @@ const KeyCodes = {
 const delimiters = [KeyCodes.space, KeyCodes.enter];
 
 const BoardCreate = ({ history }) =>
-    <div className={styles.boardCreateWrap}>
-        <div>
-            <BoardCreateForm history={history} />
+    <div className={styles.boardBackWrap}>
+        <div className={styles.layerTop}>
+            <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
         </div>
-        <Link className={styles.subBtn} to={routes.HOME}>목록으로</Link>
+        <div className={styles.boardBoxWrap}>
+            <div className={styles.detailInfoWrap}>
+                <BoardCreateForm history={history} />
+            </div>
+        </div>
     </div>
 
 const getToday = () => {
@@ -34,7 +38,7 @@ const getToday = () => {
     if(dd<10){
         dd='0'+dd;
     }
-    today = yyyy + "-" + mm + "-" + dd;
+    today = yyyy + "." + mm + "." + dd;
     return today
 };
 
@@ -44,7 +48,7 @@ const INITIAL_STATE = {
     nickname: '',
     title: '',
     description: '',
-    rating: 5.0,
+    rating: 0,
     tags: [],
     image: '',
     imageName: '',
@@ -98,6 +102,7 @@ class BoardCreateForm extends Component {
         });
     }
 
+    //태그 삭제 이벤트
     _handleDelete(i) {
         const { tags } = this.state;
         this.setState({
@@ -105,21 +110,21 @@ class BoardCreateForm extends Component {
         });
     }
 
+    //태그 입력 이벤트
     _handleAddition(tag) {
-        if(this.state.tags.length > 5) {
+        if(this.state.tags.length > 4) {
           alert("태그는 5개 이상 입력할 수 없습니다.");
           return false;
         }
         this.setState(state => ({ tags: [...state.tags, tag] }));
     }
 
+    //별점 입력 이벤트
     _onStarClickHalfStar(nextValue, prevValue, name, e) {
         const xPos = (e.pageX - e.currentTarget.getBoundingClientRect().left) / e.currentTarget.offsetWidth;
         if (xPos <= 0.5) {
             nextValue -= 0.5;
         }
-        console.log('name: %s, nextValue: %s, prevValue: %s', name, nextValue, prevValue);
-        // console.log(e);
         this.setState({rating: nextValue});
     }
 
@@ -143,41 +148,28 @@ class BoardCreateForm extends Component {
 
         //태그 array로 변환
         let tagArr = [];
-        for (var i in tags) {
-            tagArr.push(tags[i].text);
-        }
+        for (let i in tags) tagArr.push(tags[i].text);
 
-        const promise = cb => new Promise(response => {
-            // 콜백 함수 안에서 resolve 함수를 실행해야 순서가 보장됨.
-            cb(response);
-        });
+        const _this = this;
 
         //storage에 이미지 업로드
-        const UploadStorage = storage.uploadImage(image, imageName).on('state_changed', snapshot => {
+        storage.uploadImage(image, imageName).on('state_changed', snapshot => {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
-            }, function(error) {
-                console.log(error);
-            }, function() {
-                console.log("성공")
-            });
-
-        (async () => {
-            await promise(UploadStorage);
-        })();
-
-        //이미지 업로드 끝난 후, 작성 내용 DB 업로드
-        db.doCreateBoard(author, nickname, title, description, rating, tagArr, imageName, startedAt, dateWithFormat)
-            .then(() => {
-                this.setState({ ...INITIAL_STATE });
-                // setTimeout(function(){
-                    console.log("완료");
+            document.getElementById('loaderWrap').style.display = "flex";
+        }, function(error) {
+            console.log(error);
+        }, function() {
+            db.doCreateBoard(author, nickname, title, description, rating, tagArr, imageName, startedAt, dateWithFormat)
+                .then(() => {
+                    _this.setState({ ...INITIAL_STATE });
                     history.push(routes.HOME);
-                // }, 1000);
-            })
-            .catch(error => {
-                this.setState(byPropKey('error', error));
-            });
+                })
+                .catch(error => {
+                    _this.setState(byPropKey('error', error));
+                });
+            document.getElementById('loaderWrap').style.display = "none";
+        });
 
         event.preventDefault();
     }
@@ -194,19 +186,18 @@ class BoardCreateForm extends Component {
 
         const isInvalid =
             title === '' ||
+            description === '' ||
             rating === '' ||
             tags === '' ||
             image === '';
 
         return (
-            <form onSubmit={this._onSubmit}>
-                <div>
-                    <ImageUpload updateName={this._updateName}
-                             updateImage={this._updateImage}
-                    />
-                </div>
-                <ul>
-                    <li>
+            <form className={styles.uploadWrap} onSubmit={this._onSubmit}>
+                <ImageUpload updateName={this._updateName}
+                         updateImage={this._updateImage}
+                />
+                <div className={styles.rightText}>
+                    <h3>
                         <input
                             type="text"
                             onChange={event => this.setState(byPropKey('title', event.target.value))}
@@ -215,41 +206,31 @@ class BoardCreateForm extends Component {
                             placeholder="Title"
                             id="title"
                         />
-                    </li>
-                    <li>
-                        <StarRating
-                            name="rating"
-                            starColor="#ffb400"
-                            emptyStarColor="#ffb400"
-                            value={this.state.rating}
-                            onStarClick={this._onStarClickHalfStar.bind(this)}
-                            renderStarIcon={(index, value) => {
-                                return (
-                                    <span>
-                                        <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
-                                    </span>
-                                );
-                            }}
-                            renderStarIconHalf={() => {
-                                return (
-                                    <span>
-                                        <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
-                                        <span><i className="fas fa-star-half" /></span>
-                                    </span>
-                                );
-                            }}
-                        />
-                        <span>{this.state.rating}</span>
-                    </li>
-                    <li className={styles.tagWrap}>
-                        <ReactTags
-                            tags={tags}
-                            delimiters={delimiters}
-                            handleDelete={this._handleDelete}
-                            handleAddition={this._handleAddition}
-                        />
-                    </li>
-                    <li>
+                    </h3>
+                    <StarRating
+                        name="rating"
+                        starColor="#fcd111"
+                        emptyStarColor="#fcd111"
+                        value={this.state.rating}
+                        onStarClick={this._onStarClickHalfStar.bind(this)}
+                        renderStarIcon={(index, value) => {
+                            return (
+                                <span>
+                                    <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
+                                </span>
+                            );
+                        }}
+                        renderStarIconHalf={() => {
+                            return (
+                                <span>
+                                    <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
+                                    <span><i className="fas fa-star-half" /></span>
+                                </span>
+                            );
+                        }}
+                    />
+                </div>
+                <div className={styles.bottomText}>
                         <textarea
                             onChange={event => this.setState(byPropKey('description', event.target.value))}
                             placeholder="Description"
@@ -257,10 +238,18 @@ class BoardCreateForm extends Component {
                             rows="3"
                             value={description}
                         >{description}</textarea>
-                    </li>
-                </ul>
-                <button disabled={isInvalid} type="submit">Submit</button>
-
+                    <div className={styles.tagWrap}>
+                        <ReactTags
+                            tags={tags}
+                            delimiters={delimiters}
+                            handleDelete={this._handleDelete}
+                            handleAddition={this._handleAddition}
+                        />
+                    </div>
+                </div>
+                <div className={styles.btnWrap}>
+                    <button className={styles.submitBtn} disabled={isInvalid} type="submit">Submit</button>
+                </div>
                 { error && <p>{error.message}</p> }
             </form>
         );

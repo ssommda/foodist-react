@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
-import styles from 'shared/Board.module.css';
+import styles from 'shared/App.module.css';
 
 class BoardList extends Component {
 
@@ -22,14 +22,6 @@ class BoardList extends Component {
           })
       );
     }
-
-    // componentDidMount() {
-    //     db.onceGetBoards().then(snapshot =>
-    //         this.setState({
-    //             boards: snapshot.val()
-    //         })
-    //     );
-    // }
 
     render() {
         const {boards} = this.state;
@@ -56,8 +48,8 @@ const BoardListItems = ({ boards }) =>
                     <p className={styles.author}>{boards[key].nickname}</p>
                     <StarRating
                     name="rating"
-                    starColor="#ffb400"
-                    emptyStarColor="#ffb400"
+                    starColor="#fcd111"
+                    emptyStarColor="#fcd111"
                     value={boards[key].rating}
                     renderStarIcon={(index, value) => {
                         return (
@@ -74,11 +66,11 @@ const BoardListItems = ({ boards }) =>
                             </span>
                         );
                     }}/>
-                  <div>
-                      {boards[key].tags.map((tag, index) =>
-                          <span key={index}># {tag}</span>
-                      )}
-                  </div>
+                </div>
+                <div className={styles.tagWrap}>
+                    {boards[key].tags.map((tag, index) =>
+                        <span key={index}># {tag}</span>
+                    )}
                 </div>
             </Link>
         </li>

@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
-import styles from 'shared/Board.module.css';
+import Comment from 'components/Comment';
+import styles from 'shared/App.module.css';
 
 class BoardDetail extends Component {
 
@@ -12,7 +13,7 @@ class BoardDetail extends Component {
         super(props);
         this.state = {
             detail: {},
-            key: '',
+            key: this.props.match.params,
             error: ''
         };
     }
@@ -25,7 +26,8 @@ class BoardDetail extends Component {
 
         db.onceGetBoardDetail(id).then(snapshot =>
             _this.setState({
-                detail: snapshot.val()
+                detail: snapshot.val(),
+                key: id,
             })
         )
     }
@@ -51,54 +53,65 @@ class BoardDetail extends Component {
             // error,
         } = this.state.detail;
 
+        const boardkey = this.state.key;
+
         return (
-            <div className={styles.boardDetailWrap}>
-                <Link to={routes.HOME}>목록으로</Link>
-                <div className={styles.imgWrap}>
-                {/*<BoardImage url={imageName} name={imageName} />*/}
-                {imageName &&
-                    <BoardImage url={imageName} name={imageName} />
-                }
+            <div className={styles.boardBackWrap}>
+                <div className={styles.layerTop}>
+                    <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
                 </div>
-                <h3>{title}</h3>
-                <div>
-                    <h4>설명</h4>
-                    <p>{description}</p>
-                </div>
-                <div>
-                    <h4>닉네임</h4>
-                    <p>{nickname}</p>
-                </div>
-                <StarRating
-                name="rating"
-                editing={false}
-                starColor="#ffb400"
-                emptyStarColor="#ffb400"
-                value={rating}
-                renderStarIcon={(index, value) => {
-                    return (
-                        <span>
+                <div className={styles.boardBoxWrap}>
+                    <div className={styles.detailInfoWrap}>
+                        <div className={styles.imgWrap}>
+                            {imageName &&
+                            <BoardImage url={imageName} name={imageName} />
+                            }
+                        </div>
+                        <div className={styles.rightText}>
+                            <h3>{title}</h3>
+                            <p>{nickname}</p>
+                            <StarRating
+                                name="rating"
+                                editing={false}
+                                starColor="#fcd111"
+                                emptyStarColor="#fcd111"
+                                value={rating}
+                                renderStarIcon={(index, value) => {
+                                    return (
+                                        <span>
                                 <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
                             </span>
-                    );
-                }}
-                renderStarIconHalf={() => {
-                    return (
-                        <span>
+                                    );
+                                }}
+                                renderStarIconHalf={() => {
+                                    return (
+                                        <span>
                                 <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
                                 <span><i className="fas fa-star-half" /></span>
                             </span>
-                    );
-                }}/>
-                <div>
-                    <p>{tags}</p>
-                    <p>{dateWithFormat}</p>
+                                    );
+                                }}/>
+                        </div>
+                        <div className={styles.bottomText}>
+                            <p className={styles.commentCon}>{description}</p>
+                            <p className={styles.commentDate}>- {dateWithFormat}</p>
+                            <p className={styles.tagList}>{!!tags && <TagList tags={tags} />}</p>
+                        </div>
+                        <Comment boardKey={boardkey} />
+                    </div>
                 </div>
                 {/*<Link to={`/edit/${this.state.key}`} class="btn btn-success">Edit</Link>&nbsp;*/}
                 {/*<button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>*/}
+
             </div>
         );
     }
 }
+
+const TagList = ({ tags }) =>
+    tags.map((tag, index) =>
+        <span key={index}># {tag}</span>
+    );
+
 
 export default BoardDetail;

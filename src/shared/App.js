@@ -32,6 +32,13 @@ class App extends Component {
     render() {
         return (
             <div className={styles.wrap}>
+                <div id="loaderWrap">
+                    <ul id="loader">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
                 <div>
                     <header>
                         <Logo></Logo>
