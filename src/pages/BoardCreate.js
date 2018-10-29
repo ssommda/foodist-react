@@ -243,11 +243,12 @@ class BoardCreateForm extends Component {
                     >{description}</textarea>
                     <div className={styles.tagWrap}>
                         <ReactTags
+                            inline
                             tags={tags}
                             delimiters={delimiters}
                             handleDelete={this._handleDelete}
                             handleAddition={this._handleAddition}
-                            autofocus="false"
+                            autofocus={false}
                         />
                         <p>태그는 '스페이스바' 또는 '엔터'를 사용해 5개까지 입력이 가능합니다.</p>
                     </div>
