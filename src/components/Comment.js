@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import withAuthorization from './withAuthorization';
 import { auth, db } from '../firebase';
 import StarRating from 'components/StarRating';
-import styles from 'shared/Common.module.css';
 import styles from 'shared/Board.module.css';
 
 const getToday = () => {

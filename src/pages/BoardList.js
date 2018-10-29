@@ -4,7 +4,6 @@ import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import SearchByTag from 'components/SearchByTag';
-import styles from 'shared/Common.module.css';
 import styles from 'shared/Board.module.css';
 
 class BoardList extends Component {
@@ -15,6 +14,7 @@ class BoardList extends Component {
         this.state = {
             boards: null,
         };
+        this._getTagData = this._getTagData.bind(this);
     }
 
     componentWillMount() {
@@ -77,7 +77,7 @@ const BoardListItems = ({ boards }) =>
                     }}/>
                 </div>
                 <div className={styles.tagWrap}>
-                    {boards[key].tags.map((tag, index) =>
+                    {Object.keys(boards[key].tags).map((tag, index) =>
                         <span key={index}># {tag}</span>
                     )}
                 </div>

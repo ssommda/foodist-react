@@ -5,7 +5,6 @@ import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import Comment from 'components/Comment';
-import styles from 'shared/Common.module.css';
 import styles from 'shared/Board.module.css';
 
 class BoardDetail extends Component {
@@ -17,6 +16,7 @@ class BoardDetail extends Component {
             key: this.props.match.params,
             error: ''
         };
+        this._deleteBoard = this._deleteBoard.bind(this);
     }
 
     componentDidMount() {
@@ -28,22 +28,22 @@ class BoardDetail extends Component {
         db.onceGetBoardDetail(id).then(snapshot =>
             _this.setState({
                 detail: snapshot.val(),
-                key: id,
+                // key: id,
             })
         )
     }
 
     //게시글 삭제
     _deleteBoard() {
-        const {id} = this.props.match.params;
+        const boardKey = this.state.key.id;
         const _this = this;
 
-        if (!id) return;
+        if (!boardKey) return;
 
-        db.onceRemoveBoard(id).then(() => {
+        db.onceRemoveBoard(boardKey).then(() => {
             console.log("successfully deleted!");
-            // this.props.history.push("/");
-            history.push(routes.HOME);
+            _this.props.history.push("/");
+            // history.push(routes.HOME);
         }).catch((error) => {
             console.error("Error removing document: ", error);
         });
@@ -101,7 +101,7 @@ class BoardDetail extends Component {
                                 }}/>
                         </div>
                         <div className={styles.bottomText}>
-                            <p className={styles.commentCon}>{description}</p>
+                            <pre className={styles.commentCon}>{description}</pre>
                             <p className={styles.commentDate}>- {dateWithFormat}</p>
                             <p className={styles.tagList}>{!!tags && <TagList tags={tags} />}</p>
                         </div>
@@ -117,7 +117,7 @@ class BoardDetail extends Component {
 }
 
 const TagList = ({ tags }) =>
-    tags.map((tag, index) =>
+    Object.keys(tags).map((tag, index) =>
         <span key={index}># {tag}</span>
     );
 

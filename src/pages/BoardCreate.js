@@ -6,7 +6,6 @@ import withAuthorization from 'components/withAuthorization';
 import ImageUpload from 'components/ImageUpload';
 import StarRating from 'components/StarRating';
 import { WithContext as ReactTags } from 'react-tag-input';
-import styles from 'shared/Common.module.css';
 import styles from 'shared/Board.module.css';
 
 const KeyCodes = {
@@ -147,11 +146,8 @@ class BoardCreateForm extends Component {
         } = this.props;
 
         //태그 array로 변환
-        let tagArr = [];
-        for (let i in tags) tagArr.push(tags[i].text);
-
-        //textarea 개행 넣기
-        let descriptionWithBr = description.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        let tagObj = {};
+        for (let i in tags) tagObj[tags[i].text] = true;
 
         const _this = this;
 
@@ -163,7 +159,7 @@ class BoardCreateForm extends Component {
         }, function(error) {
             console.log(error);
         }, function() {
-            db.doCreateBoard(author, nickname, title, descriptionWithBr, rating, tagArr, imageName, startedAt, dateWithFormat)
+            db.doCreateBoard(author, nickname, title, description, rating, tagObj, imageName, startedAt, dateWithFormat)
                 .then(() => {
                     _this.setState({ ...INITIAL_STATE });
                     history.push(routes.HOME);
@@ -238,12 +234,11 @@ class BoardCreateForm extends Component {
                         onChange={event => this.setState(byPropKey('description', event.target.value))}
                         placeholder="먹어본 느낌을 상세히 적어주세요."
                         cols="80"
-                        rows="3"
+                        rows="2"
                         value={description}
                     >{description}</textarea>
                     <div className={styles.tagWrap}>
                         <ReactTags
-                            inline
                             tags={tags}
                             delimiters={delimiters}
                             handleDelete={this._handleDelete}

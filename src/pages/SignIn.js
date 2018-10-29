@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { auth } from '../firebase';
 import { SignUpLink } from './SignUp';
 import { PasswordForgetLink } from './PasswordForget';
-import styles from 'shared/Common.module.css';
 import styles from 'shared/Member.module.css';
 import logo from '../images/logo.png';
 

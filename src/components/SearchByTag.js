@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import styles from 'shared/Common.module.css';
+import { db } from '../firebase';
 // import styles from 'shared/Board.module.css';
 
 
@@ -8,7 +8,7 @@ class SearchByTag extends Component {
     constructor(props){
         super(props);
         this.state = {
-            searhTag = ''
+            searchTag : ''
         }
     }
 
@@ -21,6 +21,8 @@ class SearchByTag extends Component {
             _this.props.sendTagData(snapshot.val());
         });
 
+        db.onceGetSearchByTag(tag);
+
         event.preventDefault();
     }
 
@@ -28,15 +30,13 @@ class SearchByTag extends Component {
 
         return (
             <div>
-                <form role="search">
-                    <input
-                        type="search"
-                        name="searchByTag"
-                        placeholder="검색하고 싶은 태그를 입력해주세요."
-                        onChange={this.setState({searchTag : event.target.value})}
-                    />
-                    <button onClick={this._onSubmit}>Search</button>
-                </form>
+                <input
+                    type="text"
+                    name="searchByTag"
+                    placeholder="검색하고 싶은 태그를 입력해주세요."
+                    onChange={event => this.setState({searchTag : event.target.value})}
+                />
+                <button onClick={this._onSubmit}>Search</button>
             </div>
         )
 

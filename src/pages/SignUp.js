@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as routes from '../constants/routes';
 import { Link, withRouter } from 'react-router-dom';
 import { auth, db } from '../firebase';
-import styles from 'shared/Common.module.css';
 import styles from 'shared/Member.module.css';
 import logo from '../images/logo.png';
 

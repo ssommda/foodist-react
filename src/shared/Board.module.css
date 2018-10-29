@@ -134,6 +134,11 @@
 .bottomText{
     padding:20px 50px;
 }
+.bottomText textarea{
+    border-bottom: 1px solid #ddd;
+    padding:17px 0;
+    margin-bottom: 40px;
+}
 .boardBoxWrap .tagList{
     margin-top: 20px;
     padding-bottom: 20px;

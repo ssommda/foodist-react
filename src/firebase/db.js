@@ -33,8 +33,18 @@ export const onceRemoveBoard = (id) =>
     db.ref('boards/' + id).remove();
 
 export const onceGetSearchByTag = (tag) =>
-    // db.ref('boards').orderByChild("boardKey").equalTo(key).once('value');
-    db.ref('boards').orderByValue("tags").equalTo(tag).once('value');
+    // db.ref('boards').orderByChild('tags').equalTo(tag).once('value');
+    db.ref('boards').orderByChild('tags/' + tag).equalTo(true).once('value');
+
+    // db.ref('boards').orderByChild('tags').once('value', function(snapshot) {
+    //     snapshot.forEach(function(childSnapshot) {
+    //         var childKey = childSnapshot.key;
+    //         var childData = childSnapshot.val();
+    //         // ...
+    //         if (childKey == tag)
+    //             return childData
+    //     });
+    // });
 
 
 // Comment API

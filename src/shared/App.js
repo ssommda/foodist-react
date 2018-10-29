@@ -9,7 +9,7 @@ import withAuthentication from 'components/withAuthentication';
 
 import * as routes from '../constants/routes';
 import { firebase } from '../firebase';
-import styles from './App.module.css';
+import styles from './Common.module.css';
 
 class App extends Component {
     constructor(props) {
