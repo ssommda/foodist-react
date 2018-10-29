@@ -29,6 +29,13 @@ export const onceGetBoards = () =>
 export const onceGetBoardDetail = (id) =>
     db.ref('boards/' + id).once('value');
 
+export const onceRemoveBoard = (id) =>
+    db.ref('boards/' + id).remove();
+
+export const onceGetSearchByTag = (tag) =>
+    // db.ref('boards').orderByChild("boardKey").equalTo(key).once('value');
+    db.ref('boards').orderByValue("tags").equalTo(tag).once('value');
+
 
 // Comment API
 

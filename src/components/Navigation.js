@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 
 import AuthUserContext from './AuthUserContext';
 import * as routes from '../constants/routes';
-import styles from 'shared/App.module.css';
-
+import styles from 'shared/Common.module.css';
 
 const Navigation = () =>
     <AuthUserContext.Consumer>

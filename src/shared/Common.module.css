@@ -1,0 +1,78 @@
+/* common style */
+.wrap {
+    background : #efeeec;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+.wrap .innerWrap {
+    position: relative;
+    width: 1245px;
+    height: 100%;
+    margin: 0 auto;
+}
+header{
+    max-width:1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 160px
+}
+header h1{
+    width: 95px;
+}
+.navMenu{
+    height:46px;
+}
+.menuButton{
+    float:left;
+}
+.menuButton a{
+    display: block;
+    padding:10px 30px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-left: 50px;
+    color: #666;
+    border: 1px solid #efeeec;
+    transition: all .3s;
+    box-sizing: border-box;
+}
+/*.menuButton a:hover{*/
+    /*!*border: 1px solid rgba(255,255,255,.7);*!*/
+    /*background:rgba(255,255,255,.2);*/
+    /*box-shadow: 6px 14px 52px -18px rgba(0,0,0,0.39);*/
+/*}*/
+.body{
+    max-width:1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+img{
+    width: 100%;
+}
+
+
+/* 반응형 미디어쿼리 */
+@media screen and (max-width: 768px) {
+    header{
+        padding: 20px;
+        display: block;
+    }
+    header h1{
+        margin: 0 auto;
+    }
+    .navMenu{
+        padding:10px 0;
+    }
+    .menuButton{
+        width: 33.33%;
+    }
+    .menuButton a{
+        margin: 0 5px;
+        padding: 10px 0;
+    }
+}

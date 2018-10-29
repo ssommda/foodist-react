@@ -5,7 +5,8 @@ import AuthUserContext from 'components/AuthUserContext';
 import PasswordChangeForm from 'components/PasswordChange';
 import withAuthorization from 'components/withAuthorization';
 import SignOutButton from 'components/SignOut';
-import styles from 'shared/App.module.css';
+import styles from 'shared/Common.module.css';
+import styles from 'shared/Member.module.css';
 import logo from '../images/logo.png';
 
 const Account = () =>

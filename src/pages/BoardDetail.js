@@ -5,7 +5,8 @@ import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import Comment from 'components/Comment';
-import styles from 'shared/App.module.css';
+import styles from 'shared/Common.module.css';
+import styles from 'shared/Board.module.css';
 
 class BoardDetail extends Component {
 
@@ -32,14 +33,21 @@ class BoardDetail extends Component {
         )
     }
 
-    // delete(id){
-    //   firebase.firestore().collection('boards').doc(id).delete().then(() => {
-    //     console.log("Document successfully deleted!");
-    //     this.props.history.push("/")
-    //   }).catch((error) => {
-    //     console.error("Error removing document: ", error);
-    //   });
-    // }
+    //게시글 삭제
+    _deleteBoard() {
+        const {id} = this.props.match.params;
+        const _this = this;
+
+        if (!id) return;
+
+        db.onceRemoveBoard(id).then(() => {
+            console.log("successfully deleted!");
+            // this.props.history.push("/");
+            history.push(routes.HOME);
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+    }
 
     render() {
         const {
@@ -101,7 +109,7 @@ class BoardDetail extends Component {
                     </div>
                 </div>
                 {/*<Link to={`/edit/${this.state.key}`} class="btn btn-success">Edit</Link>&nbsp;*/}
-                {/*<button onClick={this.delete.bind(this, this.state.key)} class="btn btn-danger">Delete</button>*/}
+                <button onClick={this._deleteBoard}>Delete</button>
 
             </div>
         );

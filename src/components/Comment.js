@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import withAuthorization from './withAuthorization';
 import { auth, db } from '../firebase';
 import StarRating from 'components/StarRating';
-import styles from 'shared/App.module.css';
+import styles from 'shared/Common.module.css';
+import styles from 'shared/Board.module.css';
 
 const getToday = () => {
     let today = new Date();
@@ -91,9 +92,12 @@ class Comment extends Component {
             dateWithFormat,
         } = this.state;
 
+        //textarea 개행 넣기
+        let contentsWithBr = contents.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+
         const boardKey = this.props.boardKey;
 
-        db.doRegComment(boardKey, nickname, contents, rating, startedAt, dateWithFormat)
+        db.doRegComment(boardKey, nickname, contentsWithBr, rating, startedAt, dateWithFormat)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
             })
@@ -153,12 +157,14 @@ class Comment extends Component {
                                 }}
                             />
                         </div>
-                        <input
+                        <textarea
                             type="text"
                             onChange={event => this.setState(byPropKey('contents', event.target.value))}
                             placeholder="내용을 작성해주세요."
+                            cols="80"
+                            rows="1"
                             value={contents}
-                        />
+                        >{contents}</textarea>
                         <a href="#a" className={styles.submitBtn} onClick={this._onSubmit}>Submit</a>
                         { error && <p>{error.message}</p> }
                     </form>

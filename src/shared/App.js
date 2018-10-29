@@ -5,7 +5,6 @@ import { Route } from 'react-router-dom';
 import { Home, SignUp, SignIn, PasswordForget, Account, BoardList, BoardCreate, BoardDetail } from 'pages';
 import Logo from "components/Logo";
 import Navigation from 'components/Navigation';
-// import SignOutButton from 'components/SignOut';
 import withAuthentication from 'components/withAuthentication';
 
 import * as routes from '../constants/routes';

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import styles from 'shared/App.module.css';
+import styles from 'shared/Common.module.css';
+import styles from 'shared/Board.module.css';
 
 class ImageUpload extends Component {
     constructor(props) {

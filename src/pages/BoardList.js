@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
-import styles from 'shared/App.module.css';
+import SearchByTag from 'components/SearchByTag';
+import styles from 'shared/Common.module.css';
+import styles from 'shared/Board.module.css';
 
 class BoardList extends Component {
 
@@ -16,11 +18,17 @@ class BoardList extends Component {
     }
 
     componentWillMount() {
-      db.onceGetBoards().then(snapshot =>
-          this.setState({
-              boards: snapshot.val()
-          })
-      );
+        db.onceGetBoards().then(snapshot =>
+            this.setState({
+                boards: snapshot.val()
+            })
+        );
+    }
+
+    _getTagData(boardBytag) {
+        this.setState({
+            boards: boardBytag
+        })
     }
 
     render() {
@@ -28,6 +36,7 @@ class BoardList extends Component {
 
         return (
             <div>
+                <SearchByTag sendTagData={this._getTagData} />
                 <ul className={styles.boardList}>
                     {!!boards && <BoardListItems boards={boards}/>}
                 </ul>

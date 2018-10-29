@@ -6,7 +6,8 @@ import withAuthorization from 'components/withAuthorization';
 import ImageUpload from 'components/ImageUpload';
 import StarRating from 'components/StarRating';
 import { WithContext as ReactTags } from 'react-tag-input';
-import styles from 'shared/App.module.css';
+import styles from 'shared/Common.module.css';
+import styles from 'shared/Board.module.css';
 
 const KeyCodes = {
     enter: 13,
@@ -86,7 +87,6 @@ class BoardCreateForm extends Component {
                 });
             });
         });
-        document.getElementById("title").focus();
     }
 
     _updateName(name) {
@@ -150,6 +150,9 @@ class BoardCreateForm extends Component {
         let tagArr = [];
         for (let i in tags) tagArr.push(tags[i].text);
 
+        //textarea 개행 넣기
+        let descriptionWithBr = description.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+
         const _this = this;
 
         //storage에 이미지 업로드
@@ -160,7 +163,7 @@ class BoardCreateForm extends Component {
         }, function(error) {
             console.log(error);
         }, function() {
-            db.doCreateBoard(author, nickname, title, description, rating, tagArr, imageName, startedAt, dateWithFormat)
+            db.doCreateBoard(author, nickname, title, descriptionWithBr, rating, tagArr, imageName, startedAt, dateWithFormat)
                 .then(() => {
                     _this.setState({ ...INITIAL_STATE });
                     history.push(routes.HOME);
@@ -188,7 +191,7 @@ class BoardCreateForm extends Component {
             title === '' ||
             description === '' ||
             rating === '' ||
-            tags === '' ||
+            tags.length < 1 ||
             image === '';
 
         return (
@@ -231,20 +234,22 @@ class BoardCreateForm extends Component {
                     />
                 </div>
                 <div className={styles.bottomText}>
-                        <textarea
-                            onChange={event => this.setState(byPropKey('description', event.target.value))}
-                            placeholder="Description"
-                            cols="80"
-                            rows="3"
-                            value={description}
-                        >{description}</textarea>
+                    <textarea
+                        onChange={event => this.setState(byPropKey('description', event.target.value))}
+                        placeholder="먹어본 느낌을 상세히 적어주세요."
+                        cols="80"
+                        rows="3"
+                        value={description}
+                    >{description}</textarea>
                     <div className={styles.tagWrap}>
                         <ReactTags
                             tags={tags}
                             delimiters={delimiters}
                             handleDelete={this._handleDelete}
                             handleAddition={this._handleAddition}
+                            autofocus="false"
                         />
+                        <p>태그는 '스페이스바' 또는 '엔터'를 사용해 5개까지 입력이 가능합니다.</p>
                     </div>
                 </div>
                 <div className={styles.btnWrap}>
