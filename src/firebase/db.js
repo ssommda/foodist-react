@@ -46,5 +46,5 @@ export const doRegComment = (boardKey, nickname, contents, rating, startedAt, da
 export const onceGetComments = (key) =>
     db.ref('comments').orderByChild("boardKey").equalTo(key).once('value');
 
-export const onceRemoveComments = (key) =>
-    db.ref('comments').orderByChild("boardKey").equalTo(key).remove();
+// export const onceRemoveComments = (key) =>
+//     db.ref('comments').orderByChild("boardKey").equalTo(key).remove();

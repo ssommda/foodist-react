@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// import { db } from '../firebase';
 // import styles from 'shared/Board.module.css';
-
 
 class SearchByTag extends Component {
 
@@ -15,11 +13,7 @@ class SearchByTag extends Component {
     //댓글 작성
     _onSubmit = (event) => {
         const tag = this.state.searchTag;
-
-        history.push({
-            pathname: '/',
-            search: '?tag=' + tag
-        });
+        this.props.sendTag(tag)
     }
 
     render() {
@@ -33,8 +27,10 @@ class SearchByTag extends Component {
                 />
                 <button onClick={this._onSubmit}>Search</button>
             </div>
-        );
+        )
+
     }
 }
 
 export default SearchByTag;
+

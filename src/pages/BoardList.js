@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
+import { withRouter } from 'react-router-dom';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import SearchByTag from 'components/SearchByTag';
@@ -14,26 +15,28 @@ class BoardList extends Component {
         this.state = {
             boards: null,
         };
-        this._getTagData = this._getTagData.bind(this);
+        this._updateList = this._updateList.bind(this);
     }
 
     componentWillMount() {
-        const {searchTag} = this.props.match.params;
-        const _this = this;
+        db.onceGetBoards().then(snapshot =>
+            this.setState({
+                boards: snapshot.val()
+            })
+        );
+    }
 
-        if(!searchTag) {
-            db.onceGetBoards().then(snapshot =>
-                _this.setState({
-                    boards: snapshot.val()
-                })
-            );
-        } else {
-            db.onceGetSearchByTag(searchTag).then(snapshot => {
-                _this.setState({
-                    boards: snapshot.val()
-                })
-            });
-        }
+    _updateList(searchTag) {
+        db.onceGetSearchByTag(searchTag).then(snapshot => {
+            this.setState({
+                boards: snapshot.val()
+            })
+        });
+
+        this.props.history.push({
+            pathname: '/',
+            search: `?tag=${searchTag}`
+        })
     }
 
     render() {
@@ -41,7 +44,7 @@ class BoardList extends Component {
 
         return (
             <div>
-                <SearchByTag />
+                <SearchByTag sendTag={this._updateList} />
                 <ul className={styles.boardList}>
                     {!!boards && <BoardListItems boards={boards}/>}
                 </ul>
@@ -89,4 +92,4 @@ const BoardListItems = ({ boards }) =>
             </Link>
         </li>
     )
-export default BoardList;
+export default withRouter(BoardList);

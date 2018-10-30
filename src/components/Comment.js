@@ -92,11 +92,11 @@ class Comment extends Component {
         } = this.state;
 
         //textarea 개행 넣기
-        let contentsWithBr = contents.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        // let contentsWithBr = contents.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
         const boardKey = this.props.boardKey;
 
-        db.doRegComment(boardKey, nickname, contentsWithBr, rating, startedAt, dateWithFormat)
+        db.doRegComment(boardKey, nickname, contents, rating, startedAt, dateWithFormat)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
             })

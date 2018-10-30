@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as routes from '../constants/routes';
 import { Link } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
-import withAuthorization from 'components/withAuthorization';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import Comment from 'components/Comment';
@@ -31,21 +30,23 @@ class BoardDetail extends Component {
         db.onceGetBoardDetail(id).then(snapshot =>
             _this.setState({
                 detail: snapshot.val(),
-                key: id,
+                // key: id,
             })
         )
+    }
 
+    componentDidMount() {
         //로그인 유저에 따라 게시글 권한 변경
         const loginUserEmail = auth.currentUserCheck();
-
+        const _this = this;
         db.onceGetUsernickname(loginUserEmail).then(snapshot => {
             snapshot.forEach(function(childSnapshot) {
                 const nickname = childSnapshot.val().nickname;
 
                 if(_this.state.detail.nickname === nickname)
-                    _this.setState({
-                        authorCheck: true
-                    });
+                _this.setState({
+                    authorCheck: true
+                });
             });
         });
     }
@@ -74,9 +75,9 @@ class BoardDetail extends Component {
 
             //스토리지에서 해당 게시물의 이미지 삭제
             storage.getImageRef(imageName).delete().then(function() {
-                // File deleted successfully
+              // File deleted successfully
             }).catch(function(error) {
-                // Uh-oh, an error occurred!
+              // Uh-oh, an error occurred!
             });
         }
 
@@ -148,7 +149,7 @@ class BoardDetail extends Component {
                 </div>
 
                 {authorCheck &&
-                <button onClick={this._deleteBoard}>Delete</button>
+                    <button onClick={this._deleteBoard}>Delete</button>
                 }
             </div>
         );
@@ -160,5 +161,5 @@ const TagList = ({ tags }) =>
         <span key={index}># {tag}</span>
     );
 
-const authCondition = (authUser) => !!authUser;
-export default withAuthorization(authCondition)(BoardDetail);
+
+export default BoardDetail;

@@ -17,5 +17,5 @@ export const uploadImage = (blob, name) => {
 }
 
 //이미지 삭제
-export const getImageUrl = (imageUrl) =>
+export const getImageRef = (imageUrl) =>
     storage.ref().child(imageUrl).getDownloadURL()
