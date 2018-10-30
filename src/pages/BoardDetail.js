@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as routes from '../constants/routes';
 import { Link } from 'react-router-dom';
-import { db } from '../firebase';
+import { auth, db, storage } from '../firebase';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import Comment from 'components/Comment';
@@ -14,17 +14,19 @@ class BoardDetail extends Component {
         this.state = {
             detail: {},
             key: this.props.match.params,
+            authorCheck: false,
             error: ''
         };
         this._deleteBoard = this._deleteBoard.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const {id} = this.props.match.params;
         const _this = this;
 
         if (!id) return;
 
+        //DB에서 해당 게시글 가져오기
         db.onceGetBoardDetail(id).then(snapshot =>
             _this.setState({
                 detail: snapshot.val(),
@@ -33,20 +35,56 @@ class BoardDetail extends Component {
         )
     }
 
+    componentDidMount() {
+        //로그인 유저에 따라 게시글 권한 변경
+        const loginUserEmail = auth.currentUserCheck();
+        const _this = this;
+        db.onceGetUsernickname(loginUserEmail).then(snapshot => {
+            snapshot.forEach(function(childSnapshot) {
+                const nickname = childSnapshot.val().nickname;
+
+                if(_this.state.detail.nickname === nickname)
+                _this.setState({
+                    authorCheck: true
+                });
+            });
+        });
+    }
+
     //게시글 삭제
     _deleteBoard() {
         const boardKey = this.state.key.id;
-        const _this = this;
+        const imageName = this.state.detail.imageName;
 
         if (!boardKey) return;
 
-        db.onceRemoveBoard(boardKey).then(() => {
-            console.log("successfully deleted!");
-            _this.props.history.push("/");
-            // history.push(routes.HOME);
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-        });
+        const deleteAllBoardData = () => {
+            //디비에서 게시글 삭제
+            db.onceRemoveBoard(boardKey).then(() => {
+                console.log("successfully deleted!");
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            });
+
+            //디비에서 해당 게시물의 코멘트 삭제
+            db.onceRemoveComments(boardKey).then(() => {
+                console.log("successfully deleted!");
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            });
+
+            //스토리지에서 해당 게시물의 이미지 삭제
+            storage.getImageUrl(imageName).delete().then(function() {
+              // File deleted successfully
+            }).catch(function(error) {
+              // Uh-oh, an error occurred!
+            });
+        }
+
+        //삭제 process 완료된 후 홈으로 이동
+        deleteAllBoardData().then(() =>
+            this.props.history.push("/");
+        )
     }
 
     render() {
@@ -62,6 +100,7 @@ class BoardDetail extends Component {
         } = this.state.detail;
 
         const boardkey = this.state.key;
+        const authorCheck = this.state.authorCheck;
 
         return (
             <div className={styles.boardBackWrap}>
@@ -108,9 +147,11 @@ class BoardDetail extends Component {
                         <Comment boardKey={boardkey} />
                     </div>
                 </div>
-                {/*<Link to={`/edit/${this.state.key}`} class="btn btn-success">Edit</Link>&nbsp;*/}
-                <button onClick={this._deleteBoard}>Delete</button>
 
+                {authorCheck &&
+                    <button onClick={this._deleteBoard}>Delete</button>
+                    {/*<Link to={`/edit/${this.state.key}`}>Edit</Link>*/}
+                }
             </div>
         );
     }

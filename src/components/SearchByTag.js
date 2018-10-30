@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { db } from '../firebase';
+// import { db } from '../firebase';
 // import styles from 'shared/Board.module.css';
 
 
@@ -15,19 +15,14 @@ class SearchByTag extends Component {
     //댓글 작성
     _onSubmit = (event) => {
         const tag = this.state.searchTag;
-        const _this = this;
 
-        db.onceGetSearchByTag(tag).then(snapshot => {
-            _this.props.sendTagData(snapshot.val());
+        history.push({
+            pathname: '/',
+            search: '?tag=' + tag
         });
-
-        db.onceGetSearchByTag(tag);
-
-        event.preventDefault();
     }
 
     render() {
-
         return (
             <div>
                 <input
@@ -38,10 +33,8 @@ class SearchByTag extends Component {
                 />
                 <button onClick={this._onSubmit}>Search</button>
             </div>
-        )
-
+        );
     }
-
 }
 
 export default SearchByTag;

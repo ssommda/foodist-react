@@ -18,17 +18,22 @@ class BoardList extends Component {
     }
 
     componentWillMount() {
-        db.onceGetBoards().then(snapshot =>
-            this.setState({
-                boards: snapshot.val()
-            })
-        );
-    }
+        const {searchTag} = this.props.match.params;
+        const _this = this;
 
-    _getTagData(boardBytag) {
-        this.setState({
-            boards: boardBytag
-        })
+        if(!searchTag) {
+            db.onceGetBoards().then(snapshot =>
+                _this.setState({
+                    boards: snapshot.val()
+                })
+            );
+        } else {
+            db.onceGetSearchByTag(searchTag).then(snapshot => {
+                _this.setState({
+                    boards: snapshot.val()
+                })
+            });
+        }
     }
 
     render() {
@@ -36,7 +41,7 @@ class BoardList extends Component {
 
         return (
             <div>
-                <SearchByTag sendTagData={this._getTagData} />
+                <SearchByTag />
                 <ul className={styles.boardList}>
                     {!!boards && <BoardListItems boards={boards}/>}
                 </ul>

@@ -9,7 +9,8 @@ input,select,textarea,button {font-size:100%;vertical-align:middle}
 button {border:0 none;background-color:transparent;cursor:pointer}
 table {border-collapse:collapse;border-spacing:0;width: 100%}
 body {-webkit-text-size-adjust:none; background:#fff} /* 뷰표트 변환시 폰트크기 자동확대 방지 */
-body,th,td,input,select,textarea,button,pre {font-size:14px;line-height:1.5;font-family: 'Noto Sans KR', sans-serif;color:#000;} /* color값은 디자인가이드에 맞게사용 */
+body,th,td,input,select,textarea,button,pre {font-size:14px;line-height:1.5;font-family: 'Noto Sans KR', sans-serif;color:#000;}
+pre{white-space: pre-line;}
 
 a {color:#000;text-decoration:none;}
 a:active, a:hover {text-decoration:none}

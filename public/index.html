@@ -39,28 +39,21 @@
 </html>
 
 <script>
-//    /** * FirebaseChat ES5 클래스 */
-//    function FirebaseChat(){
-//        this.init(); this.initEvent();
-//    }
-//
-//    /** * 초기 필드 변수 할당 */
-//    FirebaseChat.prototype.init = function(){
-//        this.auth = firebase.auth();
-//    }
-//
-//    /** * 초기 이벤트 바인딩 */
-//    FirebaseChat.prototype.initEvent = function(){
-//        this.auth.onAuthStateChanged(this.onAuthChange.bind(this));
-//    }
-//
-//
-//    /** * 인증 정보가 변화 되었을 시에 변화 */
-//    FirebaseChat.prototype.onAuthChange = function(user){
-//        if (user) {
-//            console.log('user로그인 : ',JSON.stringify(user));
-//        } else {
-//            console.log('로그아웃')
-//        }
-//    }
+  // Check if a new cache is available on page load.
+  window.addEventListener('load', function(e) {
+
+    window.applicationCache.addEventListener('updateready', function(e) {
+      if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+        // Browser downloaded a new app cache.
+        // Swap it in and reload the page to get the new hotness.
+        window.applicationCache.swapCache();
+        if (confirm('A new version of this site is available. Load it?')) {
+          window.location.reload();
+        }
+      } else {
+        // Manifest didn't changed. Nothing new to server.
+      }
+    }, false);
+
+  }, false);
 </script>
