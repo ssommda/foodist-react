@@ -23,8 +23,9 @@ export const doCreateBoard = (author, nickname, title, description, rating, tags
     return db.ref('boards/'+ key).set(model);
 }
 
-export const onceGetBoards = () =>
-    db.ref('boards').once('value');
+export const onceGetBoards = (pageNum) =>
+    db.ref('boards').limitToFirst(pageNum).once('value');
+    // db.ref('boards').once('value');
 
 export const onceGetBoardDetail = (id) =>
     db.ref('boards/' + id).once('value');
@@ -32,8 +33,10 @@ export const onceGetBoardDetail = (id) =>
 export const onceRemoveBoard = (id) =>
     db.ref('boards/' + id).remove();
 
-export const onceGetSearchByTag = (tag) =>
-    db.ref('boards').orderByChild('tags/' + tag).equalTo(true).once('value');
+export const onceGetSearchByTag = (tag, pageNum) =>
+    db.ref().child('boards').orderByChild('tags/' + tag).equalTo(true).limitToFirst(pageNum).once('value');
+    // db.ref().child('boards').orderByKey().equalTo(tag).once('value');
+
 
 // Comment API
 

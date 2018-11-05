@@ -8,9 +8,7 @@ class BoardImage extends Component {
     }
 
     render() {
-        return (
-            <span id={this.props.name}></span>
-        );
+        return <span id={this.props.name}></span>;
     }
 }
 

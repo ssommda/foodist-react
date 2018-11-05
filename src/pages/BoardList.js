@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { db } from '../firebase';
-import { withRouter } from 'react-router-dom';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import SearchByTag from 'components/SearchByTag';
 import styles from 'shared/Board.module.css';
+import queryString from 'query-string';
+
+const incrementPageNum = 4;
 
 class BoardList extends Component {
 
@@ -15,27 +17,79 @@ class BoardList extends Component {
         this.state = {
             boards: null,
         };
-        this._updateList = this._updateList.bind(this);
+        this._updateTag = this._updateTag.bind(this);
+        this._onScroll = this._onScroll.bind(this);
     }
 
-    componentWillMount() {
-        db.onceGetBoards().then(snapshot =>
-            this.setState({
-                boards: snapshot.val()
-            })
-        );
+    componentDidMount() {
+
+        this._updateList();
+
+        window.addEventListener('scroll', this._onScroll);
     }
 
-    _updateList(searchTag) {
-        db.onceGetSearchByTag(searchTag).then(snapshot => {
-            this.setState({
-                boards: snapshot.val()
+    componentDidUpdate(nextProps) {
+        if (this.props !== nextProps) {
+            this._updateList();
+        }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this._onScroll);
+    }
+
+    _onScroll = () => {
+        if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight)){
+            const queryValues = queryString.parse(this.props.location.search);
+            const tagValue = queryValues.tag;
+            let pageNum = Number(queryValues.page);
+
+            if(!pageNum){
+                pageNum = incrementPageNum;
+            }
+
+            const newPage = pageNum + incrementPageNum;
+            const searchQuery = { tag: tagValue, page: newPage  };
+            const searchString = queryString.stringify(searchQuery);
+
+            this.props.history.push({
+                search: searchString
             })
-        });
+        }
+    };
+
+    _updateList() {
+        const queryValues = queryString.parse(this.props.location.search);
+        const tagValue = queryValues.tag;
+        let pageNum = Number(queryValues.page);
+
+        const _this = this;
+
+        if(!pageNum){
+            pageNum = incrementPageNum;
+        }
+
+        if(!tagValue){
+            db.onceGetBoards(pageNum).then(snapshot =>
+                _this.setState({
+                    boards: snapshot.val()
+                })
+            );
+        } else {
+            db.onceGetSearchByTag(tagValue, pageNum).then(snapshot => {
+                _this.setState({
+                    boards: snapshot.val()
+                })
+            });
+        }
+    }
+
+    _updateTag(searchTag) {
+        const searchQuery = { tag: searchTag, page: incrementPageNum };
+        const searchString = queryString.stringify(searchQuery);
 
         this.props.history.push({
-            pathname: '/',
-            search: `?tag=${searchTag}`
+            search: searchString
         })
     }
 
@@ -44,7 +98,8 @@ class BoardList extends Component {
 
         return (
             <div>
-                <SearchByTag sendTag={this._updateList} />
+                <SearchByTag sendTag={this._updateTag} />
+                {/*<SearchByTag />*/}
                 <ul className={styles.boardList}>
                     {!!boards && <BoardListItems boards={boards}/>}
                 </ul>

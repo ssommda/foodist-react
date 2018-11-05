@@ -4,7 +4,7 @@ import { storage } from './firebase';
 export const getImageUrl = (imageUrl, imageID) => {
     const imageRef = storage.ref().child(imageUrl);
     imageRef.getDownloadURL().then(function(url) {
-      document.getElementById(imageID).style.backgroundImage = "url(" + url + ")";
+        document.getElementById(imageID).style.backgroundImage = "url(" + url + ")";
     });
 };
 

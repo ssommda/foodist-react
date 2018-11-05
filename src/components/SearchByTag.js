@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 // import styles from 'shared/Board.module.css';
 
 class SearchByTag extends Component {
@@ -11,9 +12,14 @@ class SearchByTag extends Component {
     }
 
     //댓글 작성
-    _onSubmit = (event) => {
+    _onSubmit = () => {
         const tag = this.state.searchTag;
         this.props.sendTag(tag)
+
+        // this.props.history.push({
+        //     pathname: '/',
+        //     search: `?tag=${tag}`
+        // })
     }
 
     render() {
@@ -32,5 +38,4 @@ class SearchByTag extends Component {
     }
 }
 
-export default SearchByTag;
-
+export default withRouter(SearchByTag);

@@ -19,6 +19,7 @@ const BoardCreate = ({ history }) =>
     <div className={styles.boardBackWrap}>
         <div className={styles.layerTop}>
             <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
+            {/*<a href={this.props.history.go(-1)} className={styles.backBtn}>뒤로가기</a>*/}
         </div>
         <div className={styles.boardBoxWrap}>
             <div className={styles.detailInfoWrap}>
