@@ -29,11 +29,11 @@ class BoardDetail extends Component {
 
         //DB에서 해당 게시글 가져오기
         db.onceGetBoardDetail(id).then(snapshot =>
-            _this.setState({
+            this.setState({
                 detail: snapshot.val(),
                 key: id,
             })
-        )
+        );
 
         //로그인 유저에 따라 게시글 권한 변경
         const loginUserEmail = auth.currentUserCheck();
@@ -52,38 +52,49 @@ class BoardDetail extends Component {
 
     //게시글 삭제
     _deleteBoard() {
-        const boardKey = this.state.key.id;
+
+        const _this = this;
+        const boardKey = this.state.key;
         const imageName = this.state.detail.imageName;
+        const listWrap = document.getElementById('commentList');
 
-        if (!boardKey) return;
+        if(!window.confirm("정말 삭제하시겠습니까?")) return false;
 
-        const deleteAllBoardData = () => {
-            //디비에서 게시글 삭제
+        if (!boardKey) return false;
+
+        //디비에서 게시글 삭제
+        const deleteBoard = new Promise(function (resolve, reject) {
             db.onceRemoveBoard(boardKey).then(() => {
-                console.log("successfully deleted!");
+                resolve();
             }).catch((error) => {
                 console.error("Error removing document: ", error);
             });
 
-            //디비에서 해당 게시물의 코멘트 삭제
-            db.onceRemoveComments(boardKey).then(() => {
-                console.log("successfully deleted!");
-            }).catch((error) => {
-                console.error("Error removing document: ", error);
-            });
+        });
 
-            //스토리지에서 해당 게시물의 이미지 삭제
+        //스토리지에서 해당 게시물의 이미지 삭제
+        const deleteImage = new Promise(function (resolve, reject) {
             storage.getImageRef(imageName).delete().then(function() {
-                // File deleted successfully
+                resolve();
             }).catch(function(error) {
                 // Uh-oh, an error occurred!
             });
-        }
+        });
+
+        //디비에서 해당 게시물의 코멘트 삭제
+        const deleteComment = new Promise(function (resolve, reject) {
+            if (!listWrap.hasChildNodes()) {
+                resolve();
+            } else {
+                db.onceRemoveComments(boardKey);
+                resolve();
+            }
+        });
 
         //삭제 process 완료된 후 홈으로 이동
-        deleteAllBoardData().then(() =>
-            this.props.history.push("/")
-        )
+        Promise.all([deleteBoard, deleteImage, deleteComment]).then(function () {
+            _this.props.history.push("/");
+        });
     }
 
     render() {

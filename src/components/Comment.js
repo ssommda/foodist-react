@@ -123,9 +123,9 @@ class Comment extends Component {
             error,
         } = this.state;
 
-        // const isInvalid =
-        //     rating === '' ||
-        //     contents === '';
+        const isInvalid =
+            rating === 0 ||
+            contents === '';
 
         return (
             <div className={styles.commentWrap}>
@@ -164,11 +164,11 @@ class Comment extends Component {
                             rows="1"
                             value={contents}
                         >{contents}</textarea>
-                        <a href="#a" className={styles.submitBtn} onClick={this._onSubmit}>Submit</a>
+                        <button className={styles.submitBtn} disabled={isInvalid} onClick={this._onSubmit} type="button" >Submit</button>
                         { error && <p>{error.message}</p> }
                     </form>
                 </div>
-                <ul className={styles.commentList}>
+                <ul className={styles.commentList} id="commentList">
                     {!!comments && <CommentListItems comments={comments}/>}
                 </ul>
             </div>

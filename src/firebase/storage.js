@@ -4,7 +4,10 @@ import { storage } from './firebase';
 export const getImageUrl = (imageUrl, imageID) => {
     const imageRef = storage.ref().child(imageUrl);
     imageRef.getDownloadURL().then(function(url) {
-        document.getElementById(imageID).style.backgroundImage = "url(" + url + ")";
+        const targetDOM = document.getElementById(imageID);
+        if(targetDOM){
+            targetDOM.style.backgroundImage = "url(" + url + ")";
+        }
     });
 };
 
@@ -14,8 +17,8 @@ export const uploadImage = (blob, name) => {
         contentType: 'image/jpeg'
     };
     return storage.ref().child(name).put(blob, metadata);
-}
+};
 
 //이미지 삭제
 export const getImageRef = (imageUrl) =>
-    storage.ref().child(imageUrl).getDownloadURL()
+    storage.ref().child(imageUrl);

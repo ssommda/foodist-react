@@ -17,25 +17,19 @@ export const onceGetUsernickname = (loginEmail) =>
 
 // Board API
 
+export const getBoardRef = db.ref('boards');
+
 export const doCreateBoard = (author, nickname, title, description, rating, tags, imageName, startedAt, dateWithFormat) => {
-    let key = db.ref('boards').push().key;
+    let key = getBoardRef.push().key;
     let model = {author, nickname, title, description, rating, tags, imageName, startedAt, dateWithFormat};
     return db.ref('boards/'+ key).set(model);
-}
-
-export const onceGetBoards = (pageNum) =>
-    db.ref('boards').limitToFirst(pageNum).once('value');
-    // db.ref('boards').once('value');
+};
 
 export const onceGetBoardDetail = (id) =>
     db.ref('boards/' + id).once('value');
 
 export const onceRemoveBoard = (id) =>
     db.ref('boards/' + id).remove();
-
-export const onceGetSearchByTag = (tag, pageNum) =>
-    db.ref().child('boards').orderByChild('tags/' + tag).equalTo(true).limitToFirst(pageNum).once('value');
-    // db.ref().child('boards').orderByKey().equalTo(tag).once('value');
 
 
 // Comment API
@@ -49,5 +43,10 @@ export const doRegComment = (boardKey, nickname, contents, rating, startedAt, da
 export const onceGetComments = (key) =>
     db.ref('comments').orderByChild("boardKey").equalTo(key).once('value');
 
-// export const onceRemoveComments = (key) =>
-//     db.ref('comments').orderByChild("boardKey").equalTo(key).remove();
+
+const commentRef = db.ref('comments');
+
+export const onceRemoveComments = (key) =>
+    commentRef.orderByChild("boardKey").equalTo(key).on('child_added', snapshot => {
+        snapshot.ref.remove()
+    });

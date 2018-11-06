@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "async": "^2.6.1",
     "cross-env": "^5.2.0",
     "firebase": "^5.5.4",
     "immutable": "^3.8.2",

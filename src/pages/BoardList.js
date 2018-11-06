@@ -7,7 +7,8 @@ import SearchByTag from 'components/SearchByTag';
 import styles from 'shared/Board.module.css';
 import queryString from 'query-string';
 
-const incrementPageNum = 4;
+const incrementPageNum = 3;
+let totalPageNum;
 
 class BoardList extends Component {
 
@@ -43,12 +44,18 @@ class BoardList extends Component {
             const queryValues = queryString.parse(this.props.location.search);
             const tagValue = queryValues.tag;
             let pageNum = Number(queryValues.page);
+            let newPage;
 
-            if(!pageNum){
-                pageNum = incrementPageNum;
+            if(!pageNum){   //초기 화면일때
+                pageNum = 1;
             }
 
-            const newPage = pageNum + incrementPageNum;
+            if (pageNum !== totalPageNum) {
+                newPage = pageNum + 1; //페이지 1씩 증가
+            } else {
+                return false;   //전체 페이지와 같으면 증가시키지 않음
+            }
+
             const searchQuery = { tag: tagValue, page: newPage  };
             const searchString = queryString.stringify(searchQuery);
 
@@ -66,17 +73,34 @@ class BoardList extends Component {
         const _this = this;
 
         if(!pageNum){
-            pageNum = incrementPageNum;
+            pageNum = 1;
         }
 
+        const listNum = pageNum * incrementPageNum;
+
         if(!tagValue){
-            db.onceGetBoards(pageNum).then(snapshot =>
+
+            //리스트 갯수
+            db.getBoardRef.once('value').then(snapshot =>
+                totalPageNum = Math.ceil(snapshot.numChildren()/incrementPageNum)
+            );
+
+            //리스트 data
+            db.getBoardRef.limitToFirst(listNum).once('value').then(snapshot => {
                 _this.setState({
                     boards: snapshot.val()
                 })
-            );
+            });
+
         } else {
-            db.onceGetSearchByTag(tagValue, pageNum).then(snapshot => {
+
+            //리스트 갯수
+            db.getBoardRef.orderByChild('tags/' + tagValue).equalTo(true).once('value').then(snapshot =>
+                totalPageNum = Math.ceil(snapshot.numChildren()/incrementPageNum)
+            );
+
+            //리스트 data
+            db.getBoardRef.orderByChild('tags/' + tagValue).equalTo(true).limitToFirst(listNum).once('value').then(snapshot => {
                 _this.setState({
                     boards: snapshot.val()
                 })
@@ -146,5 +170,5 @@ const BoardListItems = ({ boards }) =>
                 </div>
             </Link>
         </li>
-    )
+    );
 export default withRouter(BoardList);

@@ -176,7 +176,7 @@
 .uploadWrap .submitBtn{
     position: relative;
 }
-.uploadWrap .submitBtn:disabled{
+.submitBtn:disabled{
     background: #ddd;
 }
 .starRatingWrap label{
