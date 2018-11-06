@@ -9,7 +9,9 @@ import withAuthentication from 'components/withAuthentication';
 
 import * as routes from '../constants/routes';
 import { firebase } from '../firebase';
+import classNames from 'classnames/bind';
 import styles from './Common.module.css';
+const cx = classNames.bind(styles);
 
 class App extends Component {
     constructor(props) {
@@ -17,7 +19,10 @@ class App extends Component {
 
         this.state = {
             authUser: null,
+            showMenu: false,
         };
+
+        this._toggleMenu = this._toggleMenu.bind(this);
     }
 
     componentDidMount() {
@@ -28,7 +33,17 @@ class App extends Component {
         });
     }
 
+    _toggleMenu() {
+        this.setState({ showMenu : !this.state.showMenu});
+    }
+
+    _handleChildClick(e) {
+        e.stopPropagation();
+    }
+
+
     render() {
+
         return (
             <div className={styles.wrap}>
                 <div id="loaderWrap">
@@ -38,14 +53,21 @@ class App extends Component {
                         <li></li>
                     </ul>
                 </div>
-                <div>
-                    <header>
+                <Logo></Logo>
+                <button className={styles.btnMenu} type="button" onClick={this._toggleMenu}>메뉴</button>
+                <div className={cx('dim',{
+                    active: this.state.showMenu
+                })} onClick={this._toggleMenu}>
+                    <div className={styles.navWrap}>
                         <Logo></Logo>
                         <Navigation authUser={this.state.authUser} />
-                    </header>
+                        {/*<button className={styles.btnClose} type="button" onClick={this._toggleMenu}>닫기</button>*/}
+                    </div>
+                </div>
+                <div className={styles.bodyWithLeft}>
+                    <Route exact path={routes.HOME} component={Home}/>
                 </div>
                 <div className={styles.body}>
-                    <Route exact path={routes.HOME} component={Home}/>
                     <Route path={routes.SIGN_IN} component={SignIn}/>
                     <Route path={routes.SIGN_UP} component={SignUp}/>
                     <Route path={routes.ACCOUNT} component={Account}/>

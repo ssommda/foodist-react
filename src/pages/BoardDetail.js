@@ -115,7 +115,10 @@ class BoardDetail extends Component {
         return (
             <div className={styles.boardBackWrap}>
                 <div className={styles.layerTop}>
-                    <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
+                    <Link className={styles.backBtn} to={routes.HOME}>Back</Link>
+                    {authorCheck &&
+                    <button onClick={this._deleteBoard}>삭제</button>
+                    }
                 </div>
                 <div className={styles.boardBoxWrap}>
                     <div className={styles.detailInfoWrap}>
@@ -157,10 +160,6 @@ class BoardDetail extends Component {
                         <Comment boardKey={boardkey} />
                     </div>
                 </div>
-
-                {authorCheck &&
-                <button onClick={this._deleteBoard}>Delete</button>
-                }
             </div>
         );
     }

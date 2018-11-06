@@ -12,6 +12,7 @@
     box-sizing: border-box;
     padding-right: 15vw;
     align-items: center;
+    z-index: 9999;
 }
 .backWrap h1{
     text-align: center;

@@ -11,23 +11,51 @@
     height: 100%;
     margin: 0 auto;
 }
-header{
-    max-width:1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 160px
+.wrap > h1{
+    text-align: center;
+    display: none;
+    padding-top:50px;
 }
-header h1{
+.wrap > h1 img{
     width: 95px;
 }
+.btnMenu{
+    text-indent: -9999px;
+    background: url(../images/btn_menu.png) center no-repeat;
+    background-size: 25px;
+    width: 25px;
+    padding: 10px;
+    position: fixed;
+    left: 50px;
+    top: 25px;
+    z-index: 9999;
+    display: none;
+}
+.navWrap{
+    position: fixed;
+    background: #f9f9f9;
+    left:0;
+    top:0;
+    width: 15%;
+    height:100vh;
+    box-sizing: border-box;
+    padding: 50px 0;
+    box-shadow: 6px 14px 45px -18px rgba(0,0,0,0.5);
+    z-index: 9999;
+    transition: all .3s;
+}
+.navWrap h1{
+    width: 95px;
+    margin: 0 auto;
+}
 .navMenu{
-    height:46px;
+    margin: 100px 0;
+}
+.navMenu li{
+    margin-bottom: 20px;
 }
 .menuButton{
-    float:left;
+    /*float:left;*/
 }
 .menuButton a{
     display: block;
@@ -35,17 +63,25 @@ header h1{
     text-align: center;
     font-size: 16px;
     border-radius: 5px;
-    margin-left: 50px;
     color: #666;
-    border: 1px solid #efeeec;
-    transition: all .3s;
     box-sizing: border-box;
 }
-/*.menuButton a:hover{*/
-    /*!*border: 1px solid rgba(255,255,255,.7);*!*/
-    /*background:rgba(255,255,255,.2);*/
-    /*box-shadow: 6px 14px 52px -18px rgba(0,0,0,0.39);*/
-/*}*/
+.navWrap .btnClose{
+    text-indent: -9999px;
+    background: url(../images/btn_close.png) center no-repeat;
+    background-size: 25px;
+    width: 25px;
+    padding: 10px;
+    position: fixed;
+    right: -50px;
+    top: 25px;
+    z-index: 9999;
+}
+.bodyWithLeft{
+    margin-left: 15%;
+    padding: 0 50px;
+    overflow: hidden;
+}
 .body{
     max-width:1400px;
     margin: 0 auto;
@@ -57,22 +93,108 @@ img{
 
 
 /* 반응형 미디어쿼리 */
-@media screen and (max-width: 768px) {
-    header{
-        padding: 20px;
+@media screen and (max-width: 1200px) {
+    .btnMenu{
         display: block;
     }
-    header h1{
-        margin: 0 auto;
+    .dim{
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        visibility: hidden;
+        opacity: 0;
+        transition: all .3s;
+        z-index: 9999;
+    }
+    .navWrap{
+        width: 250px;
+        transform: translateX(-300px);
+    }
+    .bodyWithLeft{
+        margin-left: 0;
+        padding: 0 30px;
+    }
+    .active .navWrap{
+        transform: translateX(0);
+    }
+    .dim.active{
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .bodyWithLeft{
+        padding: 0 20px;
+    }
+}
+
+@media screen and (max-width: 765px) {
+    .bodyWithLeft{
+        padding: 0 50px;
+    }
+}
+
+@media screen and (max-width: 415px) {
+    .wrap > h1{
+        display: block;
+    }
+    .bodyWithLeft{
+        padding: 0 20px;
+    }
+    .btnMenu{
+        display: none;
+    }
+    .dim{
+        position: static;
+        width: auto;
+        height: auto;
+        visibility: visible;
+        opacity: 1;
+    }
+    .navWrap{
+        transform: translateX(0);
+        box-shadow: none;
+        width: 100%;
+        background: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        padding:0;
+        height: auto;
+        background: #f9f9f9;
+    }
+    .navWrap h1{
+        display: none;
     }
     .navMenu{
-        padding:10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
+        height: 65px;
     }
-    .menuButton{
-        width: 33.33%;
+    .navMenu li{
+        margin: 0;
+        width: 33.3%;
     }
-    .menuButton a{
-        margin: 0 5px;
-        padding: 10px 0;
+    .navMenu li a{
+        display: block;
+        text-indent: -9999px;
+    }
+    .navMenu li:nth-of-type(1) a{
+        background: url(../images/foot_icon_home.png) center no-repeat;
+        background-size: 25px;
+    }
+    .navMenu li:nth-of-type(2) a{
+        background: url(../images/foot_icon_create.png) center no-repeat;
+        background-size: 25px;
+    }
+    .navMenu li:nth-of-type(3) a{
+        background: url(../images/foot_icon_account.png) center no-repeat;
+        background-size: 25px;
     }
 }

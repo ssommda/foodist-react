@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-// import styles from 'shared/Board.module.css';
+import styles from 'shared/Board.module.css';
 
 class SearchByTag extends Component {
 
@@ -11,7 +11,7 @@ class SearchByTag extends Component {
         }
     }
 
-    //댓글 작성
+    //검색어 전송
     _onSubmit = () => {
         const tag = this.state.searchTag;
         this.props.sendTag(tag)
@@ -20,18 +20,29 @@ class SearchByTag extends Component {
         //     pathname: '/',
         //     search: `?tag=${tag}`
         // })
-    }
+    };
+
+    //input에서 enter키 감지, event trigger
+    _onEnter = (event) => {
+        if (event.keyCode === 13) {
+            this._onSubmit();
+        }
+    };
+
 
     render() {
         return (
-            <div>
-                <input
-                    type="text"
-                    name="searchByTag"
-                    placeholder="검색하고 싶은 태그를 입력해주세요."
-                    onChange={event => this.setState({searchTag : event.target.value})}
-                />
-                <button onClick={this._onSubmit}>Search</button>
+            <div className={styles.listFixWrap}>
+                <div className={styles.listSearchWrap}>
+                    <input
+                        type="text"
+                        name="searchByTag"
+                        placeholder="검색하고 싶은 태그를 입력해주세요."
+                        onChange={event => this.setState({searchTag : event.target.value})}
+                        onKeyDown={this._onEnter}
+                    />
+                    <button onClick={this._onSubmit}>Search</button>
+                </div>
             </div>
         )
 

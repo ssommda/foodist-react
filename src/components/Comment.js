@@ -164,8 +164,10 @@ class Comment extends Component {
                             rows="1"
                             value={contents}
                         >{contents}</textarea>
-                        <button className={styles.submitBtn} disabled={isInvalid} onClick={this._onSubmit} type="button" >Submit</button>
-                        { error && <p>{error.message}</p> }
+                        <div className={styles.submitBtnWap}>
+                            <button className={styles.submitBtn} disabled={isInvalid} onClick={this._onSubmit} type="button" >Submit</button>
+                            { error && <p>{error.message}</p> }
+                        </div>
                     </form>
                 </div>
                 <ul className={styles.commentList} id="commentList">
@@ -202,7 +204,7 @@ const CommentListItems = ({ comments }) =>
                         );
                     }}/>
             </div>
-            <p className={styles.commentCon}>{comments[key].contents}</p>
+            <pre className={styles.commentCon}>{comments[key].contents}</pre>
             <p className={styles.commentDate}>- {comments[key].dateWithFormat}</p>
         </li>
     )

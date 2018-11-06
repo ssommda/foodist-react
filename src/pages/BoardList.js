@@ -7,7 +7,7 @@ import SearchByTag from 'components/SearchByTag';
 import styles from 'shared/Board.module.css';
 import queryString from 'query-string';
 
-const incrementPageNum = 3;
+const incrementPageNum = 6;
 let totalPageNum;
 
 class BoardList extends Component {
@@ -51,7 +51,7 @@ class BoardList extends Component {
             }
 
             if (pageNum !== totalPageNum) {
-                newPage = pageNum + 1; //페이지 1씩 증가
+                newPage = pageNum + 1;  //페이지 1씩 증가
             } else {
                 return false;   //전체 페이지와 같으면 증가시키지 않음
             }

@@ -1,7 +1,38 @@
 /* 리스트 */
+.listFixWrap{
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    background: #efeeec;
+    z-index: 999;
+}
+.listSearchWrap{
+    margin: 20px 70px;
+    text-align: right;
+}
+.listSearchWrap input{
+    width: 400px;
+    background: none;
+    border-bottom: 1px solid #ddd;
+}
+.listSearchWrap button{
+    display: block;
+    width: 40px;
+    height: 40px;
+    text-indent: -9999px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -20px;
+    background: url(../images/btn_search.png) center no-repeat;
+    background-size: 20px;
+}
+
 .boardList{
     overflow: hidden;
     padding: 80px 0;
+    margin-top: 100px;
 }
 .boardList li{
     float: left;
@@ -74,21 +105,47 @@
     left:0;
     top:0;
     width: 100%;
-    min-hieht: 100vh;
+    min-height: 100vh;
     background: #efeeec;
+    z-index: 9999;
 }
 .boardBoxWrap{
-    max-width: 1000px;
-    margin: 200px auto 50px;
+    max-width: 1200px;
+    margin: 230px auto 100px;
     background: #fff;
 }
 .layerTop{
-    padding: 20px 50px;
+    width: 1200px;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #efeeec;
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .layerTop .backBtn{
     font-weight: bold;
     color: #2b4993;
+    font-size: 20px;
+    background: url(../images/btn_back.png) left center no-repeat;
+    background-size: 20px;
+    padding-left: 30px;
+}
+.layerTop button{
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
     font-size: 16px;
+    border-radius: 30px;
+    background: #2b4993;
+    color: #fff;
+    padding: 0 35px
 }
 .boardBoxWrap .detailInfoWrap{
     position: relative;
@@ -102,7 +159,7 @@
     background: url(../images/img_default.png) center;
     background-position: center;
     position: absolute;
-    top: -100px;
+    top: -80px;
     left: 50px;
 }
 .boardBoxWrap .imgWrap span{
@@ -116,9 +173,9 @@
     background-position: center;
 }
 .rightText{
-    height: 285px;
+    height: 295px;
     box-sizing: border-box;
-    padding: 50px 50px 50px 450px;
+    padding: 60px 50px 60px 450px;
 }
 .rightText h3{
     font-size: 40px;
@@ -136,7 +193,7 @@
 }
 .bottomText textarea{
     border-bottom: 1px solid #ddd;
-    padding:17px 0;
+    padding:30px 0;
     margin-bottom: 40px;
 }
 .boardBoxWrap .tagList{
@@ -166,6 +223,8 @@
 }
 .rightText h3 input{
     font-size: 40px;
+    padding:10px 0;
+    border: 0;
 }
 .uploadWrap h3{
     margin-bottom: 25px;
@@ -182,6 +241,26 @@
 .starRatingWrap label{
     font-size: 30px;
 }
+.boardBoxWrap .tagWrap span{
+    display: inline-block;
+    background: #efeeec;
+    border-radius: 5px;
+    padding: 5px 5px 5px 10px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+.boardBoxWrap .tagWrap span a{
+    padding:5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.boardBoxWrap .tagWrap input{
+    padding: 5px 0;
+    margin: 10px 0;
+}
+.boardBoxWrap p{
+    color: #2b4993
+}
 
 /* 댓글 */
 .commentCon{
@@ -195,15 +274,27 @@
     text-align: right;
 }
 .commentWrap{
-    padding: 0 50px 50px;
+    padding: 20px 50px 50px;
+}
+.commentWrap h4{
+    font-size: 20px;
 }
 .commentRegFrom{
     position: relative;
-    margin-top: 20px
 }
-.commentRegFrom input{
-    border-bottom: 1px solid #ddd;
-    padding:17px 0;
+.commentRegFrom .starRatingWrap{
+    position: absolute;
+    right: 0;
+    top: -40px;
+}
+.commentRegFrom textarea{
+    border: 1px solid #e8e4e4;
+    padding: 10px;
+    margin-top: 20px;
+    height:70px;
+}
+.commentRegFrom .submitBtnWap{
+    text-align: center;
 }
 .submitBtn{
     display: inline-block;
@@ -217,9 +308,6 @@
     color: #fff;
     margin: 20px 0;
     padding: 0 35px;
-    position: absolute;
-    right: 0;
-    bottom: 0;
 }
 .commentList{
     margin-top: 20px;
@@ -241,7 +329,7 @@
 
 
 /* 반응형 미디어쿼리 */
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1700px) {
     .boardBackWrap{
         padding:0 20px;
         box-sizing: border-box;
@@ -256,7 +344,58 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1200px) {
+    .listSearchWrap{
+        margin: 20px 50px;
+    }
+    .boardList{
+        padding: 40px 0;
+    }
+    .boardList .imgWrap{
+        width: 150px;
+        height: 150px;
+    }
+    .boardList .textWrap{
+        padding: 20px 20px 20px 190px;
+        height: 110px;
+    }
+    .boardList h3{
+        font-size: 18px;
+    }
+    .boardList label{
+        font-size: 20px;
+    }
+    .boardList .tagWrap{
+        margin: 0 20px;
+        padding: 15px 0;
+    }
+    .layerTop{
+        width: 100%;
+    }
+    .boardBoxWrap .imgWrap{
+        width: 300px;
+        height: 300px;
+        background-size: 200px;
+    }
+    .rightText{
+        height:230px;
+        padding: 40px 40px 40px 400px
+    }
+    .rightText h3 input{
+        font-size: 32px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .boardList h3{
+        font-size: 16px;
+    }
+    .boardBoxWrap{
+        margin: 320px auto 100px
+    }
+}
+
+@media screen and (max-width: 765px) {
     .boardList li{
         width: 100%;
         padding: 0;
@@ -282,26 +421,22 @@
 }
 
 @media screen and (max-width: 414px) {
+    .listFixWrap{
+        position: relative;
+    }
+    .listSearchWrap{
+        margin: 20px 0;
+    }
+    .listSearchWrap input{
+        width: 100%;
+        background: none;
+        border-bottom: 1px solid #ddd;
+    }
     .boardList{
-        padding: 40px 0;
+        margin-top: 20px;
     }
-    .boardList .imgWrap{
-        width: 150px;
-        height: 150px;
-    }
-    .boardList .textWrap{
-        padding: 20px 20px 20px 190px;
-        height: 110px;
-    }
-    .boardList h3{
-        font-size: 18px;
-    }
-    .boardList label{
-        font-size: 20px;
-    }
-    .boardList .tagWrap{
-        margin: 0 20px;
-        padding: 15px 0;
+    .boardBoxWrap{
+        margin: 250px auto 100px;
     }
     .boardBoxWrap .imgWrap{
         width: 200px;
@@ -316,9 +451,15 @@
         padding: 30px;
         height:210px;
     }
-    .submitBtn{
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: -80px;
+    .rightText h3 input{
+        font-size: 26px;
+        text-align: center;
     }
+    .commentRegFrom .starRatingWrap{
+        top: -35px;
+    }
+    .commentRegFrom .starRatingWrap label{
+        font-size:25px;
+    }
+
 }
