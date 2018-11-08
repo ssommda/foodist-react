@@ -1,10 +1,13 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import ScrollToTop from 'components/ScrollToTop';
 import App from 'shared/App';
 
 const Root = () => (
     <BrowserRouter>
-        <App/>
+        <ScrollToTop>
+            <App/>
+        </ScrollToTop>
     </BrowserRouter>
 );
 

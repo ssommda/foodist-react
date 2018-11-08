@@ -32,7 +32,7 @@ class SearchByTag extends Component {
 
     render() {
         return (
-            <div className={styles.listFixWrap}>
+            <div className={styles.listFixWrap} id="searchTagInput">
                 <div className={styles.listSearchWrap}>
                     <input
                         type="text"

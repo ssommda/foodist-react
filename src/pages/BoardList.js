@@ -63,6 +63,15 @@ class BoardList extends Component {
                 search: searchString
             })
         }
+
+        const searchTagInput = document.getElementById("searchTagInput");
+        const inputOffsetTop = searchTagInput.offsetTop;
+        const scroll = window.scrollY;
+        if(scroll > inputOffsetTop){
+            searchTagInput.classList.add("fixTop");
+        } else {
+            searchTagInput.classList.remove("fixTop");
+        }
     };
 
     _updateList() {

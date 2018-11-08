@@ -141,7 +141,7 @@ class BoardCreate extends Component {
 
         //storage에 이미지 업로드
         storage.uploadImage(image, imageName).on('state_changed', snapshot => {
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
             document.getElementById('loaderWrap').style.display = "flex";
         }, function(error) {
@@ -180,74 +180,76 @@ class BoardCreate extends Component {
 
         return (
             <div className={styles.boardBackWrap}>
-                <div className={styles.layerTop}>
-                    <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
-                    {/*<a href={this.props.history.go(-1)} className={styles.backBtn}>뒤로가기</a>*/}
-                    <button className={styles.submitBtn} disabled={isInvalid} type="submit">Submit</button>
-                </div>
-                <div className={styles.boardBoxWrap}>
-                    <div className={styles.detailInfoWrap}>
-                        <form className={styles.uploadWrap} onSubmit={this._onSubmit}>
-                            <ImageUpload updateName={this._updateName}
-                                         updateImage={this._updateImage}
-                            />
-                            <div className={styles.rightText}>
-                                <h3>
-                                    <input
-                                        type="text"
-                                        onChange={event => this.setState(byPropKey('title', event.target.value))}
-                                        name="title"
-                                        value={title}
-                                        placeholder="가게 이름을 적어주세요."
-                                        id="title"
-                                    />
-                                </h3>
-                                <StarRating
-                                    name="rating"
-                                    starColor="#fcd111"
-                                    emptyStarColor="#fcd111"
-                                    value={this.state.rating}
-                                    onStarClick={this._onStarClickHalfStar.bind(this)}
-                                    renderStarIcon={(index, value) => {
-                                        return (
-                                            <span>
-                                    <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
-                                </span>
-                                        );
-                                    }}
-                                    renderStarIconHalf={() => {
-                                        return (
-                                            <span>
-                                    <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
-                                    <span><i className="fas fa-star-half" /></span>
-                                </span>
-                                        );
-                                    }}
-                                />
-                            </div>
-                            <div className={styles.bottomText}>
-                                <textarea
-                                    onChange={event => this.setState(byPropKey('description', event.target.value))}
-                                    placeholder="먹어본 느낌을 상세히 적어주세요."
-                                    cols="80"
-                                    rows="2"
-                                    value={description}
-                                >{description}</textarea>
-                                <div className={styles.tagWrap}>
-                                    <ReactTags
-                                        tags={tags}
-                                        delimiters={delimiters}
-                                        handleDelete={this._handleDelete}
-                                        handleAddition={this._handleAddition}
-                                        autofocus={false}
-                                    />
-                                    <p>태그는 '스페이스바' 또는 '엔터'를 사용해 5개까지 입력이 가능합니다.</p>
-                                </div>
-                            </div>
-                            { error && <p>{error.message}</p> }
-                        </form>
+                <form onSubmit={this._onSubmit}>
+                    <div className={styles.layerTop}>
+                        <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
+                        {/*<a href={this.props.history.go(-1)} className={styles.backBtn}>뒤로가기</a>*/}
+                        <button className={styles.submitBtn} disabled={isInvalid} type="submit" onClick={this._onSubmit}>Submit</button>
                     </div>
-                </div>
+                    <div className={styles.boardBoxWrap}>
+                        <div className={styles.detailInfoWrap}>
+                            <div className={styles.uploadWrap}>
+                                <ImageUpload updateName={this._updateName}
+                                             updateImage={this._updateImage}
+                                />
+                                <div className={styles.rightText}>
+                                    <h3>
+                                        <input
+                                            type="text"
+                                            onChange={event => this.setState(byPropKey('title', event.target.value))}
+                                            name="title"
+                                            value={title}
+                                            placeholder="가게 이름을 적어주세요."
+                                            id="title"
+                                        />
+                                    </h3>
+                                    <StarRating
+                                        name="rating"
+                                        starColor="#fcd111"
+                                        emptyStarColor="#fcd111"
+                                        value={this.state.rating}
+                                        onStarClick={this._onStarClickHalfStar.bind(this)}
+                                        renderStarIcon={(index, value) => {
+                                            return (
+                                                <span>
+                                        <i className={index <= value ? 'fas fa-star' : 'far fa-star'} />
+                                    </span>
+                                            );
+                                        }}
+                                        renderStarIconHalf={() => {
+                                            return (
+                                                <span>
+                                        <span style={{position: 'absolute'}}><i className="far fa-star" /></span>
+                                        <span><i className="fas fa-star-half" /></span>
+                                    </span>
+                                            );
+                                        }}
+                                    />
+                                </div>
+                                <div className={styles.bottomText}>
+                                    <textarea
+                                        onChange={event => this.setState(byPropKey('description', event.target.value))}
+                                        placeholder="먹어본 느낌을 상세히 적어주세요."
+                                        cols="80"
+                                        rows="2"
+                                        value={description}
+                                    >{description}</textarea>
+                                    <div className={styles.tagWrap}>
+                                        <ReactTags
+                                            tags={tags}
+                                            delimiters={delimiters}
+                                            handleDelete={this._handleDelete}
+                                            handleAddition={this._handleAddition}
+                                            autofocus={false}
+                                        />
+                                        <p>태그는 '스페이스바' 또는 '엔터'를 사용해 5개까지 입력이 가능합니다.</p>
+                                    </div>
+                                </div>
+                                { error && <p>{error.message}</p> }
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
 
         );
