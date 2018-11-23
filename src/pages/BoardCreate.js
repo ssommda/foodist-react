@@ -100,9 +100,17 @@ class BoardCreate extends Component {
     //태그 입력 이벤트
     _handleAddition(tag) {
         if(this.state.tags.length > 4) {
-          alert("태그는 5개 이상 입력할 수 없습니다.");
-          return false;
+            alert("태그는 5개 이상 입력할 수 없습니다.");
+            return false;
         }
+        
+        //특수문자 정규식 체크
+        const regx = /[[\]\\/?.,;:|)*~`!^\-_+<>@#$%&=('"]/gi;
+        if(regx.test(tag.text)) {
+            alert("특수문자를 포함한 태그는 입력할 수 없습니다.")
+            return false;
+        }
+
         this.setState(state => ({ tags: [...state.tags, tag] }));
     }
 

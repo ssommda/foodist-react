@@ -20,7 +20,9 @@ Firebase 호스팅 주소 : https://foodist-react.firebaseapp.com/
 3. Firebase Storage : 식당 이미지 저장
 4. Firebase Hosting : 도메인 생성과 서버 호스팅
 
-전체적인 기능은 Firebase에서 제공하는 솔루션을 이용해 구현했다면, 프론트에서는 React를 기반으로 어떻게 해야 좀 더 효율적으로 페이지를 구성하고 기능을 재사용 가능한 컴포넌트 단위로 나눌지 고민해 제작하였다. 그래서 디렉토리를 크게 components, pages, firebase 로 나누어 기능을 분리하였다.
+전체적인 기능은 Firebase에서 제공하는 솔루션을 이용해 구현했다면, 프론트에서는 React를 기반으로 어떻게 해야 좀 더 효율적으로 페이지를 구성하고 기능을 재사용 가능한 컴포넌트 단위로 나눌지 고민해 제작하였다.
+
+그래서 디렉토리를 크게 components, pages, firebase 로 나누어 기능을 분리하였다.
 
 ```bash
 ┌── components
@@ -138,11 +140,15 @@ export const currentUserCheck = () => {
 ## Self feedback
 __1. Firestore? Realtime Database?__
 초반 DB구성에 대해 고민할 시점에 Firebase가 Realtime Database와 Firestore의 두 가지 데이터베이스 솔루션을 제공한다는 것을 알았고, 기획한 프로젝트가 심플하다고 생각했기 떄문에 Realtime Database를 선택했지만 나중에 검색기능을 구현하려고 알아보니 그 선택이 실수였다는 것을 뒤늦게 깨달았다.
+
 우선, Realtime Database는 원하는 Query를 만들 수가 없었다. 예를 들면, 리스트 화면에서 최신 글을 제일 위로 올리고 싶었는데 내림차순 정렬 기능이 제공되지 않아 불가능했다. 또한 orderBy 함수를 한번에 하나 밖에 사용하지 못하기 때문에 두가지 필드의 검색을 하기 위해서는 _'date_rating'_ 과 같이 검색을 위한 필드를 만들어 데이터를 중복저장하는 방법으로만 가능했다.
+
 결론적으로, Realtime Databse는 단순한 데이터 저장과 읽기에는 적합하지만 좀 더 손쉽게 복잡한 데이터 처리를 하기 위해서는 Firestore로 대체할 수 있다는 판단 하에 조만간 DB를 Firestore로 마이그레이션할 예정이다.
 
 __2. Scroll Restoration__
-라우터로 페이지가 이동될 때 이전 페이지의 스크롤이 유지되어 UX상 문제가 발견되었다. 보통은 스크롤 회복이 필요한 페이지에서 componentDidMount() 에 window.scrollTo(0,0) 을 하는 방법을 사용하고 있었는데 별로 좋은 방법이 아닌거 같아 찾아보니, react-router에서 공식적으로 제공하는 방법(https://reacttraining.com/react-router/web/guides/scroll-restoration)이 있었다.
+라우터로 페이지가 이동될 때 이전 페이지의 스크롤이 유지되어 UX상 문제가 발견되었다.
+
+보통은 스크롤 회복이 필요한 페이지에서 componentDidMount() 에 window.scrollTo(0,0) 을 하는 방법을 사용하고 있었는데 별로 좋은 방법이 아닌거 같아 찾아보니, react-router에서 공식적으로 제공하는 방법(https://reacttraining.com/react-router/web/guides/scroll-restoration)이 있었다.
 
 ```javascript
 class ScrollToTop extends Component {
@@ -168,8 +174,9 @@ const App = () => (
 )
 ```
 
- 라우트 컴포넌트가 업데이트 될 때 props값에 따라 페이지가 변경된 것을 감지해 스크롤을 위로 올려주는 기능을 컴포넌트화 시켜, 이 컴포넌트를 App이 렌더링될 때 모든 페이지에 적용될 수 있도록 하는 방법이었다.
- 이 프로젝트에서는 리스트 화면에서 무한 스크롤 기능 구현때문에 pagination 번호를 props에 업데이트 시켜주는데, 이 기능과 충돌이 나서 이 프로젝트에서는 아래와 같이 약간 변형해 사용하였다.
+라우트 컴포넌트가 업데이트 될 때 props값에 따라 페이지가 변경된 것을 감지해 스크롤을 위로 올려주는 기능을 컴포넌트화 시켜, 이 컴포넌트를 App이 렌더링될 때 모든 페이지에 적용될 수 있도록 하는 방법이었다.
+
+이 프로젝트에서는 리스트 화면에서 무한 스크롤 기능 구현때문에 pagination 번호를 props에 업데이트 시켜주는데, 이 기능과 충돌이 나서 이 프로젝트에서는 아래와 같이 약간 변형해 사용하였다.
 
 ```javascript
 componentDidUpdate(prevProps) {
@@ -183,8 +190,11 @@ componentDidUpdate(prevProps) {
 
 __3. Exception Handling__
 아무래도 처음 서비스를 기획하고 개발하다보니 예외처리에 대한 개념이나 범위에 대한 감이 부족해 하나씩 불편함이나 오류가 발견될 때마다 업데이트 하는 방식으로 처리하고 있다. 최근에 피드백 받은 오류가 있는데, 태그 입력 시 사용자가 태그명에 #을 포함해 입력하고 등록 버튼을 눌렀을 때 아래와 같은 오류가 나면서 등록이 안된다는 것이었다.
+
 `Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`
-즉, Firebase DB Key에 "#" 과 같은 문자가 포함될 수 없다는 것이었는데 문제는 로딩중에 반환이 안되고 페이지가 로딩화면에서 멈춰버리는 것이었다. 이 문제는 다음 업데이트에서 예외처리를 통해 개선할 예정이다.
+
+즉, Firebase DB Key에 "#" 과 같은 문자가 포함될 수 없다는 것이었는데 문제는 오류가 발생하면서 페이지가 로딩화면에서 멈춰버리는 것이었다. ~~이 문제는 다음 업데이트에서 예외처리를 통해 개선할 예정이다.~~ _=> 2018.11.24 업데이트 완료_
+
 이처럼 혼자서는 생각하지 못했던 사용자의 예외적인 접근방식에 대한 예외처리가 매우 어렵다는 것을 몸소 느꼈고 앞으로 계속 개선해야할 점이라고 생각한다.
 
 

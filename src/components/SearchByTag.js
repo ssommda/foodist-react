@@ -11,15 +11,24 @@ class SearchByTag extends Component {
         }
     }
 
+    //검색어 입력
+    _onChange = (event) => {
+        const inputValue = event.target.value;
+
+        //특수문자 포함 체크
+        const regx = /[[\]\\/?.,;:|)*~`!^\-_+<>@#$%&=('"]/gi;
+        if(regx.test(inputValue)) {
+            alert("특수문자를 포함한 태그는 입력할 수 없습니다.");
+            event.target.value = '';
+        }
+
+        this.setState({searchTag : inputValue});
+    };
+
     //검색어 전송
     _onSubmit = () => {
         const tag = this.state.searchTag;
         this.props.sendTag(tag)
-
-        // this.props.history.push({
-        //     pathname: '/',
-        //     search: `?tag=${tag}`
-        // })
     };
 
     //input에서 enter키 감지, event trigger
@@ -38,7 +47,7 @@ class SearchByTag extends Component {
                         type="text"
                         name="searchByTag"
                         placeholder="검색하고 싶은 태그를 입력해주세요."
-                        onChange={event => this.setState({searchTag : event.target.value})}
+                        onChange={this._onChange}
                         onKeyDown={this._onEnter}
                     />
                     <button onClick={this._onSubmit}>Search</button>
