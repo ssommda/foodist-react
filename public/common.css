@@ -34,7 +34,7 @@ select{vertical-align:middle; border: 0; border:1px solid #ccc; width:100%; heig
     background: rgba(0,0,0,.5);
     align-items: center;
     justify-content: center;
-    z-index: 99999;
+    z-index: 999999;
     display: none;
 }
 #loader{

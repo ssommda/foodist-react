@@ -166,6 +166,7 @@ img{
         padding:0;
         height: auto;
         background: #f9f9f9;
+        z-index: 99999;
     }
     .navWrap h1{
         display: none;

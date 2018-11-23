@@ -15,7 +15,7 @@ const Account = () =>
                 <div className={styles.formBoxWrap}>
                     <h1><img src={logo} alt="Foodist" /></h1>
                     <div className={styles.formWrap}>
-                        <h1>{authUser.email}</h1>
+                        <h2>{authUser.email}</h2>
                         <PasswordChangeForm />
                         <Link className={styles.subBtn} to={routes.HOME}>back</Link>
                         <p>
@@ -24,8 +24,6 @@ const Account = () =>
                     </div>
                 </div>
             </div>
-
-
         }
     </AuthUserContext.Consumer>
 

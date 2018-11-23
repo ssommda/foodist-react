@@ -134,9 +134,9 @@
 .layerTop .backBtn{
     font-weight: bold;
     color: #2b4993;
-    font-size: 20px;
+    font-size: 16px;
     background: url(../images/btn_back.png) left center no-repeat;
-    background-size: 20px;
+    background-size: 15px;
     padding-left: 30px;
 }
 .layerTop button{
@@ -461,11 +461,20 @@
     .rightText label{
         font-size: 34px;
     }
+    .boardBoxWrap .uploadWrap .imgWrap{
+        background-size: 200px;
+    }
     .commentRegFrom .starRatingWrap{
         top: -35px;
     }
     .commentRegFrom .starRatingWrap label{
         font-size:25px;
+    }
+    .bottomText{
+        padding:20px 30px;
+    }
+    .commentWrap{
+        padding: 20px 30px 30px;
     }
 
 }

@@ -182,7 +182,7 @@ class BoardCreate extends Component {
             <div className={styles.boardBackWrap}>
                 <form onSubmit={this._onSubmit}>
                     <div className={styles.layerTop}>
-                        <Link className={styles.backBtn} to={routes.HOME}>뒤로가기</Link>
+                        <Link className={styles.backBtn} to={routes.HOME}>Back</Link>
                         {/*<a href={this.props.history.go(-1)} className={styles.backBtn}>뒤로가기</a>*/}
                         <button className={styles.submitBtn} disabled={isInvalid} type="submit" onClick={this._onSubmit}>Submit</button>
                     </div>
@@ -256,8 +256,5 @@ class BoardCreate extends Component {
     }
 }
 
-// export default BoardCreate;
-
 const authCondition = (authUser) => !!authUser;
 export default withAuthorization(authCondition)(BoardCreate);
-// export {BoardCreateForm};

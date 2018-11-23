@@ -101,7 +101,4 @@ class SignInForm extends Component {
 }
 
 export default withRouter(SignIn);
-
-export {
-    SignInForm
-};
+export {SignInForm};

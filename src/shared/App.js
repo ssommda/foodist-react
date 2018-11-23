@@ -68,13 +68,13 @@ class App extends Component {
                     <Route exact path={routes.HOME} component={Home}/>
                 </div>
                 <div className={styles.body}>
+                    <Route path={routes.BOARD_CREATE} component={BoardCreate}/>
+                    <Route path='/board-detail/:id' component={BoardDetail}/>
                     <Route path={routes.SIGN_IN} component={SignIn}/>
                     <Route path={routes.SIGN_UP} component={SignUp}/>
                     <Route path={routes.ACCOUNT} component={Account}/>
                     <Route path={routes.PASSWORD_FORGET} component={PasswordForget}/>
                     <Route path={routes.BOARD_LIST} component={BoardList}/>
-                    <Route path={routes.BOARD_CREATE} component={BoardCreate}/>
-                    <Route path='/board-detail/:id' component={BoardDetail}/>
                 </div>
             </div>
         );
