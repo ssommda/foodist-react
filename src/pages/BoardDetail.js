@@ -115,7 +115,8 @@ class BoardDetail extends Component {
         return (
             <div className={styles.boardBackWrap}>
                 <div className={styles.layerTop}>
-                    <Link className={styles.backBtn} to={routes.HOME}>Back</Link>
+                    {/*<Link className={styles.backBtn} to={routes.HOME}>Back</Link>*/}
+                    <a href="javascript:history.back()" className={styles.backBtn}>Back</a>
                     {authorCheck &&
                     <button onClick={this._deleteBoard}>삭제</button>
                     }

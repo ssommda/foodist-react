@@ -7,8 +7,9 @@ import SearchByTag from 'components/SearchByTag';
 import styles from 'shared/Board.module.css';
 import queryString from 'query-string';
 
-const incrementPageNum = 6;
+const incrementPageNum = 18;
 let totalPageNum;
+let sending = false;
 
 class BoardList extends Component {
 
@@ -40,7 +41,9 @@ class BoardList extends Component {
     }
 
     _onScroll = () => {
-        if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight)){
+        //paging
+        if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight) && !sending){
+            sending = true;
             const queryValues = queryString.parse(this.props.location.search);
             const tagValue = queryValues.tag;
             let pageNum = Number(queryValues.page);
@@ -63,7 +66,8 @@ class BoardList extends Component {
                 search: searchString
             })
         }
-
+        
+        //모바일 검색창 동작
         const searchTagInput = document.getElementById("searchTagInput");
         const inputOffsetTop = searchTagInput.offsetTop;
         const scroll = window.scrollY;
@@ -98,7 +102,8 @@ class BoardList extends Component {
             db.getBoardRef.limitToFirst(listNum).once('value').then(snapshot => {
                 _this.setState({
                     boards: snapshot.val()
-                })
+                });
+                sending = false;
             });
 
         } else {
@@ -112,7 +117,8 @@ class BoardList extends Component {
             db.getBoardRef.orderByChild('tags/' + tagValue).equalTo(true).limitToFirst(listNum).once('value').then(snapshot => {
                 _this.setState({
                     boards: snapshot.val()
-                })
+                });
+                sending = false;
             });
         }
     }
