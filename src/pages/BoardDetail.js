@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import * as routes from '../constants/routes';
-import { Link } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
 import withAuthorization from 'components/withAuthorization';
 import StarRating from 'components/StarRating';
 import BoardImage from 'components/BoardImage';
 import Comment from 'components/Comment';
+import Back from 'components/Back';
 import styles from 'shared/Board.module.css';
+
+const TagList = ({ tags }) =>
+    Object.keys(tags).map((tag, index) =>
+        <span key={index}># {decodeURIComponent(tag)}</span>
+    );
 
 class BoardDetail extends Component {
 
@@ -16,7 +20,6 @@ class BoardDetail extends Component {
             detail: {},
             key: this.props.match.params,
             authorCheck: false,
-            error: ''
         };
         this._deleteBoard = this._deleteBoard.bind(this);
     }
@@ -63,7 +66,7 @@ class BoardDetail extends Component {
         if (!boardKey) return false;
 
         //디비에서 게시글 삭제
-        const deleteBoard = new Promise(function (resolve, reject) {
+        const deleteBoard = new Promise((resolve) => {
             db.onceRemoveBoard(boardKey).then(() => {
                 resolve();
             }).catch((error) => {
@@ -73,16 +76,16 @@ class BoardDetail extends Component {
         });
 
         //스토리지에서 해당 게시물의 이미지 삭제
-        const deleteImage = new Promise(function (resolve, reject) {
-            storage.getImageRef(imageName).delete().then(function() {
+        const deleteImage = new Promise((resolve) => {
+            storage.getImageRef(imageName).delete().then(() => {
                 resolve();
-            }).catch(function(error) {
-                // Uh-oh, an error occurred!
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
             });
         });
 
         //디비에서 해당 게시물의 코멘트 삭제
-        const deleteComment = new Promise(function (resolve, reject) {
+        const deleteComment = new Promise((resolve) =>  {
             if (!listWrap.hasChildNodes()) {
                 resolve();
             } else {
@@ -92,7 +95,7 @@ class BoardDetail extends Component {
         });
 
         //삭제 process 완료된 후 홈으로 이동
-        Promise.all([deleteBoard, deleteImage, deleteComment]).then(function () {
+        Promise.all([deleteBoard, deleteImage, deleteComment]).then(() => {
             _this.props.history.push("/");
         });
     }
@@ -106,17 +109,14 @@ class BoardDetail extends Component {
             tags,
             imageName,
             dateWithFormat,
-            // error,
         } = this.state.detail;
-
         const boardkey = this.state.key;
         const authorCheck = this.state.authorCheck;
 
         return (
             <div className={styles.boardBackWrap}>
                 <div className={styles.layerTop}>
-                    {/*<Link className={styles.backBtn} to={routes.HOME}>Back</Link>*/}
-                    <a href="javascript:history.back()" className={styles.backBtn}>Back</a>
+                    <Back />
                     {authorCheck &&
                     <button onClick={this._deleteBoard}>삭제</button>
                     }
@@ -166,10 +166,5 @@ class BoardDetail extends Component {
     }
 }
 
-const TagList = ({ tags }) =>
-    Object.keys(tags).map((tag, index) =>
-        <span key={index}># {tag}</span>
-    );
-
 const authCondition = (authUser) => !!authUser;
-export default withAuthorization(authCondition)(BoardDetail);
+export default withAuthorization(authCondition, BoardDetail);

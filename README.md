@@ -13,15 +13,74 @@
 ### Client
 1. create-react-app 을 이용해 리액트 프로젝트 생성
 2. react-router 라이브러리를 사용해 클라이언트 사이드에서 이뤄지는 라우팅 구현
+```javascript
+  export const HOME = '/';
 
-### Server
+  //Users
+  export const SIGN_UP = '/signup';
+  export const SIGN_IN = '/signin';
+  export const ACCOUNT = '/account';
+  export const PASSWORD_FORGET = '/pw-forget';
+
+  //Boards
+  export const BOARD_LIST = '/board-list';
+  export const BOARD_CREATE = '/board-create';
+  export const BOARD_DETAIL = '/board-detail';
+```
+> routes.js : 라우트 모음
+
+```javascript
+const Navigation = () =>
+    <div>
+        <ul className={styles.navMenu}>
+            <li className={styles.menuButton}><Link to={routes.HOME}>Home</Link></li>
+            <li className={styles.menuButton}><Link to={routes.BOARD_CREATE}>Create</Link></li>
+            <li className={styles.menuButton}><Link to={routes.ACCOUNT}>Account</Link></li>
+        </ul>
+    </div>;
+```
+> Navigation.js : 네비게이션 컴포넌트
+
+3. Context API를 이용헤 Provider 컴포넌트와 Consumer 컴포넌트를 HOC(Higher-order Component)로 만들어 전역적인 사용자 로그인 체크 구현
+
+```javascript
+  class WithAuthentication extends React.Component {
+
+      ...
+
+      componentDidMount() {
+          firebase.auth.onAuthStateChanged(authUser => {
+              authUser
+                  ? this.setState({ authUser })
+                  : this.setState({ authUser: null });
+          });
+      }
+
+      render() {
+          const { authUser } = this.state;
+          return (
+              <AuthUserContext.Provider value={authUser}>
+                  <Component {...this.props} />
+              </AuthUserContext.Provider>
+          )
+      }
+  };
+```
+> WithAuthentication.js : Provider HOC / 로그인 정보 설정
+
+```javascript
+  export default withAuthentication(App);
+```
+> App.js : Provider HOC를 사용하여 전역적으로 로그인 체크
+
+### Serverless
 1. Firebase Authentication : 회원가입, 로그인, 비밀번호 변경
 2. Firebasa Realtime Database : 게시글, 댓글 DB
 3. Firebase Storage : 식당 이미지 저장
 4. Firebase Hosting : 도메인 생성과 서버 호스팅
 
 ### Directory
-전체적인 기능은 Firebase에서 제공하는 솔루션을 이용해 구현했다면, 프론트에서는 React를 기반으로 어떻게 해야 좀 더 효율적으로 페이지를 구성하고 기능을 재사용 가능한 컴포넌트 단위로 나눌지 고민해 제작하였다. 
+전체적인 기능은 Firebase에서 제공하는 솔루션을 이용해 구현했다면, 프론트에서는 React를 기반으로 어떻게 해야 좀 더 효율적으로 페이지를 구성하고 기능을 재사용 가능한 컴포넌트 단위로 나눌지 고민해 제작하였다.
 
 그래서 디렉토리를 크게 __components, pages, firebase__ 로 나누어 기능을 분리하였다.
 
@@ -70,40 +129,86 @@ export default BoardImage;
 #### pages : 라우터로 변경되는 페이지 단위 컴포넌트
 
 ```javascript
-import React from 'react';
-import * as routes from '../constants/routes';
-import { Link } from 'react-router-dom';
-import AuthUserContext from 'components/AuthUserContext';
-import PasswordChangeForm from 'components/PasswordChange';
-import withAuthorization from 'components/withAuthorization';
-import SignOutButton from 'components/SignOut';
-import styles from 'shared/Member.module.css';
-import logo from '../images/logo.png';
+class BoardDetail extends Component {
 
-const Account = () =>
-    <AuthUserContext.Consumer>
-        {authUser =>
-            <div className={styles.backWrap}>
-                <div className={styles.formBoxWrap}>
-                    <h1><img src={logo} alt="Foodist" /></h1>
-                    <div className={styles.formWrap}>
-                        <h2>{authUser.email}</h2>
-                        <PasswordChangeForm />
-                        <Link className={styles.subBtn} to={routes.HOME}>back</Link>
-                        <p>
-                            <SignOutButton />
-                        </p>
+    ...
+
+    componentWillMount() {
+        ...
+
+        //DB에서 해당 게시글 가져오기
+        db.onceGetBoardDetail(id).then(snapshot =>
+            this.setState({
+                detail: snapshot.val(),
+                key: id,
+            })
+        );
+
+        ...
+    }
+
+    //게시글 삭제
+    _deleteBoard() {
+        const _this = this;
+        const boardKey = this.state.key;
+        const imageName = this.state.detail.imageName;
+        const listWrap = document.getElementById('commentList');
+
+        if(!window.confirm("정말 삭제하시겠습니까?")) return false;
+
+        if (!boardKey) return false;
+
+        ...
+
+        //삭제 process 완료된 후 홈으로 이동
+        Promise.all([deleteBoard, deleteImage, deleteComment]).then(() => {
+            _this.props.history.push("/");
+        });
+    }
+
+    render() {
+        const {
+            nickname,
+            title,
+            description,
+            rating,
+            tags,
+            imageName,
+            dateWithFormat,
+        } = this.state.detail;
+        const boardkey = this.state.key;
+        const authorCheck = this.state.authorCheck;
+
+        return (
+            <div className={styles.boardBackWrap}>
+                <div className={styles.layerTop}>
+                    <Back />
+                    {authorCheck &&
+                    <button onClick={this._deleteBoard}>삭제</button>
+                    }
+                </div>
+                <div className={styles.boardBoxWrap}>
+                    <div className={styles.detailInfoWrap}>
+                        <div className={styles.imgWrap}>
+                            {imageName &&
+                            <BoardImage url={imageName} name={imageName} />
+                            }
+                        </div>
+
+                        ...
+
                     </div>
                 </div>
             </div>
-        }
-    </AuthUserContext.Consumer>
+        );
+    }
+}
 
 const authCondition = (authUser) => !!authUser;
+export default withAuthorization(authCondition, BoardDetail);
 
-export default withAuthorization(authCondition)(Account);
 ```
-> ex) Account.js : 계정정보 페이지
+> ex) BoardDetail.js : 게시글 상세 페이지
 
 #### firebase : 프로젝트에 필요한 Firebase 기능별 함수
 
@@ -196,6 +301,17 @@ __3. Exception Handling__
 `Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`
 
 즉, Firebase DB Key에 "#" 과 같은 문자가 포함될 수 없다는 것이었는데 문제는 오류가 발생하면서 페이지가 로딩화면에서 멈춰버리는 것이었다. ~~이 문제는 다음 업데이트에서 예외처리를 통해 개선할 예정이다.~~ _=> 2018.11.24 업데이트 완료_
+
+```javascript
+//특수문자 정규식 체크
+const regx = /[[\]\\/?.,;:|)*~`!^\-_+<>@#$%&=('"]/gi;
+if(regx.test(tag.text)) {
+    alert("특수문자를 포함한 태그는 입력할 수 없습니다.")
+    return false;
+}
+
+tag.id = encodeURIComponent(tag.id); //encode uri
+```
 
 이처럼 혼자서는 생각하지 못했던 사용자의 예외적인 접근방식에 대한 예외처리가 매우 어렵다는 것을 몸소 느꼈고 앞으로 계속 개선해야할 점이라고 생각한다.
 

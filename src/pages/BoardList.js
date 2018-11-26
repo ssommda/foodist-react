@@ -180,7 +180,7 @@ const BoardListItems = ({ boards }) =>
                 </div>
                 <div className={styles.tagWrap}>
                     {Object.keys(boards[key].tags).map((tag, index) =>
-                        <span key={index}># {tag}</span>
+                        <span key={index}># {decodeURIComponent(tag)}</span>
                     )}
                 </div>
             </Link>

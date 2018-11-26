@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import * as routes from '../constants/routes';
-import { Link } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
 import withAuthorization from 'components/withAuthorization';
 import ImageUpload from 'components/ImageUpload';
 import StarRating from 'components/StarRating';
+import Back from 'components/Back';
 import { WithContext as ReactTags } from 'react-tag-input';
 import styles from 'shared/Board.module.css';
 
@@ -111,6 +111,8 @@ class BoardCreate extends Component {
             return false;
         }
 
+        tag.id = encodeURIComponent(tag.id); //encode uri
+        
         this.setState(state => ({ tags: [...state.tags, tag] }));
     }
 
@@ -143,14 +145,12 @@ class BoardCreate extends Component {
 
         //태그 array로 변환
         let tagObj = {};
-        for (let i in tags) tagObj[tags[i].text] = true;
+        for (let i in tags) tagObj[tags[i].id] = true;
 
         const _this = this;
 
         //storage에 이미지 업로드
         storage.uploadImage(image, imageName).on('state_changed', snapshot => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
             document.getElementById('loaderWrap').style.display = "flex";
         }, function(error) {
             console.log(error);
@@ -167,7 +167,7 @@ class BoardCreate extends Component {
         });
 
         event.preventDefault();
-    }
+    };
 
     render() {
         const {
@@ -190,8 +190,7 @@ class BoardCreate extends Component {
             <div className={styles.boardBackWrap}>
                 <form onSubmit={this._onSubmit}>
                     <div className={styles.layerTop}>
-                        <Link className={styles.backBtn} to={routes.HOME}>Back</Link>
-                        {/*<a href={this.props.history.go(-1)} className={styles.backBtn}>뒤로가기</a>*/}
+                        <Back />
                         <button className={styles.submitBtn} disabled={isInvalid} type="submit" onClick={this._onSubmit}>Submit</button>
                     </div>
                     <div className={styles.boardBoxWrap}>
@@ -265,4 +264,4 @@ class BoardCreate extends Component {
 }
 
 const authCondition = (authUser) => !!authUser;
-export default withAuthorization(authCondition)(BoardCreate);
+export default withAuthorization(authCondition, BoardCreate);

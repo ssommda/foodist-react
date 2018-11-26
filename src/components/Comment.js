@@ -91,9 +91,6 @@ class Comment extends Component {
             dateWithFormat,
         } = this.state;
 
-        //textarea 개행 넣기
-        // let contentsWithBr = contents.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-
         const boardKey = this.props.boardKey;
 
         db.doRegComment(boardKey, nickname, contents, rating, startedAt, dateWithFormat)
@@ -111,7 +108,7 @@ class Comment extends Component {
         });
 
         event.preventDefault();
-    }
+    };
 
 
     render() {
@@ -210,4 +207,4 @@ const CommentListItems = ({ comments }) =>
     )
 
 const authCondition = (authUser) => !!authUser;
-export default withAuthorization(authCondition)(Comment);
+export default withAuthorization(authCondition,Comment);

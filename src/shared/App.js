@@ -1,5 +1,3 @@
-/* 전체 App을 감싸는 곳 */
-
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import { Home, SignUp, SignIn, PasswordForget, Account, BoardList, BoardCreate, BoardDetail } from 'pages';

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import AuthUserContext from './AuthUserContext';
 import { firebase } from '../firebase';
 
@@ -29,6 +28,6 @@ const withAuthentication = (Component) =>
                 </AuthUserContext.Provider>
             )
         }
-    }
+    };
 
 export default withAuthentication;
