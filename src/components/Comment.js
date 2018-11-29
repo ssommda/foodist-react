@@ -31,7 +31,6 @@ const byPropKey = (propertyName, value) => () => ({
     [propertyName]: value,
 });
 
-
 class Comment extends Component {
 
     constructor(props) {
@@ -48,27 +47,38 @@ class Comment extends Component {
     componentWillMount() {
         const _this = this;
         const loginUserEmail = auth.currentUserCheck();
-        db.onceGetUsernickname(loginUserEmail).then(snapshot => {
-            snapshot.forEach(function(childSnapshot) {
-                const childData = childSnapshot.val();
-                const nickname = childData.nickname;
 
-                _this.setState({
-                    loginUser: loginUserEmail,
-                    nickname: nickname,
+        db.getUsernickname(loginUserEmail)
+            .then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    const nickname = doc.data().nickname;;
+                    _this.setState({
+                        loginUser: loginUserEmail,
+                        nickname: nickname,
+                    });
                 });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
             });
-        });
 
     }
 
     componentDidMount(){
         const boardKey = this.props.boardKey.id;
-        db.onceGetComments(boardKey).then(snapshot => {
-            this.setState({
-                comments: snapshot.val(),
-                boardKey: boardKey,
-            })
+
+        db.getComments(boardKey).then(querySnapshot => {
+            let commentArr = [];
+            querySnapshot.forEach((doc) => {
+                commentArr.push(doc.data())
+                this.setState({
+                    comments: commentArr,
+                    boardKey: boardKey
+                });
+            });
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
         });
     }
 
@@ -87,13 +97,12 @@ class Comment extends Component {
             nickname,
             contents,
             rating,
-            startedAt,
             dateWithFormat,
         } = this.state;
 
         const boardKey = this.props.boardKey;
 
-        db.doRegComment(boardKey, nickname, contents, rating, startedAt, dateWithFormat)
+        db.doRegComment(boardKey, nickname, contents, rating, dateWithFormat)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
             })
@@ -101,10 +110,17 @@ class Comment extends Component {
                 this.setState(byPropKey('error', error));
             });
 
-        db.onceGetComments(boardKey).then(snapshot => {
-            this.setState({
-                comments: snapshot.val()
-            })
+        db.getComments(boardKey).then(querySnapshot => {
+            let commentArr = [];
+            querySnapshot.forEach((doc) => {
+                commentArr.push(doc.data());
+                this.setState({
+                    comments: commentArr,
+                });
+            });
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
         });
 
         event.preventDefault();

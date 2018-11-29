@@ -7,7 +7,7 @@ import SearchByTag from 'components/SearchByTag';
 import styles from 'shared/Board.module.css';
 import queryString from 'query-string';
 
-const incrementPageNum = 18;
+const incrementPageNum = 12;
 let totalPageNum;
 let sending = false;
 
@@ -91,35 +91,88 @@ class BoardList extends Component {
 
         const listNum = pageNum * incrementPageNum;
 
+        let boardArr = [];
+
         if(!tagValue){
 
             //리스트 갯수
-            db.getBoardRef.once('value').then(snapshot =>
-                totalPageNum = Math.ceil(snapshot.numChildren()/incrementPageNum)
+            db.boardRef.get().then(querySnapshot =>
+                totalPageNum = Math.ceil(querySnapshot.size/incrementPageNum)
             );
 
             //리스트 data
-            db.getBoardRef.limitToFirst(listNum).once('value').then(snapshot => {
-                _this.setState({
-                    boards: snapshot.val()
+            db.boardRef
+                .orderBy("dateWithFormat", "desc")
+                .limit(listNum)
+                .get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach((doc) => {
+                        let boardData = doc.data();
+                        boardData.id = doc.id;
+                        boardArr.push(boardData);
+                        _this.setState({
+                            boards: boardArr,
+                        });
+                        sending = false;
+                    });
+                })
+                .catch(function(error) {
+                    console.log("Error getting documents: ", error);
                 });
-                sending = false;
-            });
+
+            // var boardRef = db.boardRef
+            //     .orderBy("dateWithFormat", "desc")
+            //     .limit(listNum);
+            //
+            // return boardRef.get().then(function (documentSnapshots) {
+            //     // Get the last visible document
+            //     var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+            //     // console.log("last", lastVisible);
+            //
+            //     documentSnapshots.forEach((doc) => {
+            //         let boardData = doc.data();
+            //         boardData.id = doc.id;
+            //         boardArr.push(boardData);
+            //         _this.setState({
+            //             boards: boardArr,
+            //         });
+            //         sending = false;
+            //     });
+            //
+            //     boardRef = db.boardRef
+            //         .orderBy("dateWithFormat", "desc")
+            //         .startAfter(lastVisible)
+            //         .limit(listNum);
+            // });
+
 
         } else {
 
             //리스트 갯수
-            db.getBoardRef.orderByChild('tags/' + tagValue).equalTo(true).once('value').then(snapshot =>
-                totalPageNum = Math.ceil(snapshot.numChildren()/incrementPageNum)
+            db.boardRef.where("tags." + tagValue, "==", true)
+                .get()
+                .then(querySnapshot =>
+                totalPageNum = Math.ceil(querySnapshot.size/incrementPageNum)
             );
 
             //리스트 data
-            db.getBoardRef.orderByChild('tags/' + tagValue).equalTo(true).limitToFirst(listNum).once('value').then(snapshot => {
-                _this.setState({
-                    boards: snapshot.val()
+            db.boardRef.where("tags." + tagValue, "==", true)
+                .limit(listNum)
+                .get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach((doc) => {
+                        let boardData = doc.data();
+                        boardData.id = doc.id;
+                        boardArr.push(boardData);
+                        _this.setState({
+                            boards: boardArr,
+                        });
+                        sending = false;
+                    });
+                })
+                .catch(function(error) {
+                    console.log("Error getting documents: ", error);
                 });
-                sending = false;
-            });
         }
     }
 
@@ -138,7 +191,6 @@ class BoardList extends Component {
         return (
             <div>
                 <SearchByTag sendTag={this._updateTag} />
-                {/*<SearchByTag />*/}
                 <ul className={styles.boardList}>
                     {!!boards && <BoardListItems boards={boards}/>}
                 </ul>
@@ -150,9 +202,9 @@ class BoardList extends Component {
 const BoardListItems = ({ boards }) =>
     Object.keys(boards).map((key, index) =>
         <li key={key}>
-            <Link to={`/board-detail/${key}`}>
+            <Link to={`/board-detail/${boards[key].id}`}>
                 <div className={styles.imgWrap}>
-                    <BoardImage url={boards[key].imageName} name={index + key} />
+                    <BoardImage url={boards[key].imageName} name={boards[key].id + index} />
                 </div>
                 <div className={styles.textWrap}>
                     <h3>{boards[key].title}</h3>

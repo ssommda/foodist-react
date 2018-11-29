@@ -31,26 +31,43 @@ class BoardDetail extends Component {
         if (!id) return;
 
         //DB에서 해당 게시글 가져오기
-        db.onceGetBoardDetail(id).then(snapshot =>
-            this.setState({
-                detail: snapshot.val(),
-                key: id,
-            })
-        );
+        // db.getBoardDetail(id).then(doc =>
+        //     this.setState({
+        //         detail: snapshot.val(),
+        //         key: id,
+        //     })
+        // );
+
+        db.getBoardDetail(id).then(doc => {
+            if (doc.exists) {
+                this.setState({
+                    detail: doc.data(),
+                    key: id,
+                })
+            } else {
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+
 
         //로그인 유저에 따라 게시글 권한 변경
         const loginUserEmail = auth.currentUserCheck();
 
-        db.onceGetUsernickname(loginUserEmail).then(snapshot => {
-            snapshot.forEach(function(childSnapshot) {
-                const nickname = childSnapshot.val().nickname;
-
-                if(_this.state.detail.nickname === nickname)
-                    _this.setState({
-                        authorCheck: true
-                    });
+        db.getUsernickname(loginUserEmail)
+            .then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    const nickname = doc.data().nickname;;
+                    if(_this.state.detail.nickname === nickname)
+                        _this.setState({
+                            authorCheck: true
+                        });
+                });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
             });
-        });
     }
 
     //게시글 삭제
@@ -59,15 +76,25 @@ class BoardDetail extends Component {
         const _this = this;
         const boardKey = this.state.key;
         const imageName = this.state.detail.imageName;
-        const listWrap = document.getElementById('commentList');
+        // const listWrap = document.getElementById('commentList');
 
         if(!window.confirm("정말 삭제하시겠습니까?")) return false;
 
         if (!boardKey) return false;
 
+        //디비에서 해당 게시물의 코멘트 삭제
+        // const deleteComment = new Promise((resolve) =>  {
+        //     if (!listWrap.hasChildNodes()) {
+        //         resolve();
+        //     } else {
+        //         db.removeComments(boardKey);
+        //         resolve();
+        //     }
+        // });
+
         //디비에서 게시글 삭제
         const deleteBoard = new Promise((resolve) => {
-            db.onceRemoveBoard(boardKey).then(() => {
+            db.removeBoard(boardKey).then(() => {
                 resolve();
             }).catch((error) => {
                 console.error("Error removing document: ", error);
@@ -84,18 +111,8 @@ class BoardDetail extends Component {
             });
         });
 
-        //디비에서 해당 게시물의 코멘트 삭제
-        const deleteComment = new Promise((resolve) =>  {
-            if (!listWrap.hasChildNodes()) {
-                resolve();
-            } else {
-                db.onceRemoveComments(boardKey);
-                resolve();
-            }
-        });
-
         //삭제 process 완료된 후 홈으로 이동
-        Promise.all([deleteBoard, deleteImage, deleteComment]).then(() => {
+        Promise.all([deleteBoard, deleteImage]).then(() => {
             _this.props.history.push("/");
         });
     }

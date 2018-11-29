@@ -2,51 +2,41 @@ import { db } from './firebase';
 
 // User API
 
+const userRef = db.collection("users");
+
 export const doCreateUser = (id, nickname, email) =>
-    db.ref(`users/${id}`).set({
+    userRef.doc(id).set({
         nickname,
         email,
     });
 
-export const onceGetUsers = () =>
-    db.ref('users').once('value');
-
-export const onceGetUsernickname = (loginEmail) =>
-    db.ref('users').orderByChild("email").equalTo(loginEmail).once('value');
+export const getUsernickname = (loginEmail) =>
+    userRef.where("email", "==", loginEmail).get();
 
 
 // Board API
 
-export const getBoardRef = db.ref('boards');
+export const boardRef = db.collection("boards");
 
-export const doCreateBoard = (author, nickname, title, description, rating, tags, imageName, startedAt, dateWithFormat) => {
-    let key = getBoardRef.push().key;
-    let model = {author, nickname, title, description, rating, tags, imageName, startedAt, dateWithFormat};
-    return db.ref('boards/'+ key).set(model);
+export const getBoardDetail = (id) =>
+    boardRef.doc(id).get();
+
+export const doCreateBoard = (author, nickname, title, description, rating, tags, imageName, dateWithFormat) => {
+    let model = {author, nickname, title, description, rating, tags, imageName, dateWithFormat};
+    return boardRef.add(model);
 };
 
-export const onceGetBoardDetail = (id) =>
-    db.ref('boards/' + id).once('value');
-
-export const onceRemoveBoard = (id) =>
-    db.ref('boards/' + id).remove();
-
+export const removeBoard = (id) =>
+    boardRef.doc(id).delete();
 
 // Comment API
+export const getComments = (key) =>
+    boardRef.doc(key).collection('comments').orderBy("dateWithFormat", "desc").get();
 
-export const doRegComment = (boardKey, nickname, contents, rating, startedAt, dateWithFormat) => {
-    let key = db.ref('comments').push().key;
-    let model = {boardKey, nickname, contents, rating, startedAt, dateWithFormat};
-    return db.ref('comments/'+ key).set(model);
-}
+export const doRegComment = (boardKey, nickname, contents, rating, dateWithFormat) => {
+    let model = {nickname, contents, rating, dateWithFormat};
+    return boardRef.doc(boardKey).collection('comments').add(model)
+};
 
-export const onceGetComments = (key) =>
-    db.ref('comments').orderByChild("boardKey").equalTo(key).once('value');
-
-
-const commentRef = db.ref('comments');
-
-export const onceRemoveComments = (key) =>
-    commentRef.orderByChild("boardKey").equalTo(key).on('child_added', snapshot => {
-        snapshot.ref.remove()
-    });
+// export const removeComments = (id) =>
+//     boardRef.doc(id).collection('comments').delete();

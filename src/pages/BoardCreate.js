@@ -40,7 +40,6 @@ const INITIAL_STATE = {
     tags: [],
     image: '',
     imageName: '',
-    startedAt: new Date(),
     dateWithFormat: getToday(),
     error: null,
 };
@@ -63,17 +62,21 @@ class BoardCreate extends Component {
     componentDidMount() {
         const _this = this;
         const loginUserEmail = auth.currentUserCheck();
-        db.onceGetUsernickname(loginUserEmail).then(snapshot => {
-            snapshot.forEach(function(childSnapshot) {
-                const childData = childSnapshot.val();
-                const nickname = childData.nickname;
 
-                _this.setState({
-                    author: loginUserEmail,
-                    nickname: nickname,
+        db.getUsernickname(loginUserEmail)
+            .then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    const nickname = doc.data().nickname;;
+                    _this.setState({
+                        author: loginUserEmail,
+                        nickname: nickname,
+                    });
                 });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
             });
-        });
+
     }
 
     _updateName(name) {
@@ -135,7 +138,6 @@ class BoardCreate extends Component {
             tags,
             image,
             imageName,
-            startedAt,
             dateWithFormat,
         } = this.state;
 
@@ -155,7 +157,7 @@ class BoardCreate extends Component {
         }, function(error) {
             console.log(error);
         }, function() {
-            db.doCreateBoard(author, nickname, title, description, rating, tagObj, imageName, startedAt, dateWithFormat)
+            db.doCreateBoard(author, nickname, title, description, rating, tagObj, imageName, dateWithFormat)
                 .then(() => {
                     _this.setState({ ...INITIAL_STATE });
                     history.push(routes.HOME);

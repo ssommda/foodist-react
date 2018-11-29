@@ -21,17 +21,19 @@ class Account extends Component {
     componentDidMount() {
         const _this = this;
         const loginUserEmail = auth.currentUserCheck();
-        db.onceGetUsernickname(loginUserEmail).then(snapshot => {
-            snapshot.forEach(function(childSnapshot) {
-                const childData = childSnapshot.val();
-                const nickname = childData.nickname;
-
-                _this.setState({
-                    email: loginUserEmail,
-                    nickname: nickname,
+        db.getUsernickname(loginUserEmail)
+            .then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    const nickname = doc.data().nickname;;
+                    _this.setState({
+                        email: loginUserEmail,
+                        nickname: nickname,
+                    });
                 });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
             });
-        });
     }
 
     render() {

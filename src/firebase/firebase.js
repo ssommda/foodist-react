@@ -1,7 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+// import 'firebase/database';
 import 'firebase/storage';
+import 'firebase/firestore';
 
 const config = {
     apiKey: "AIzaSyDm1wfoOtLtNLJ_sEohfH1pZEcmCZlo28g",
@@ -13,15 +14,20 @@ const config = {
 };
 
 if (!firebase.apps.length) {
-    firebase.initializeApp(config);
+    firebase.initializeApp(config, {
+        timestampsInSnapshots: true
+    });
 }
 
-const db = firebase.database();
+// const db = firebase.database();
+const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
+
+db.settings({timestampsInSnapshots: true});
 
 export {
     db,
     auth,
-    storage,
+    storage
 };
