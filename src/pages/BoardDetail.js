@@ -135,7 +135,7 @@ class BoardDetail extends Component {
                     <div className={styles.detailInfoWrap}>
                         <div className={styles.imgWrap}>
                             {imageName &&
-                            <BoardImage url={imageName} name={imageName} />
+                            <BoardImage url={imageName} />
                             }
                         </div>
                         <div className={styles.rightText}>

@@ -1,14 +1,9 @@
 import { storage } from './firebase';
 
 //이미지 url 가져오기
-export const getImageUrl = (imageUrl, imageID) => {
+export const getImageUrl= (imageUrl) => {
     const imageRef = storage.ref().child(imageUrl);
-    imageRef.getDownloadURL().then(function(url) {
-        const targetDOM = document.getElementById(imageID);
-        if(targetDOM){
-            targetDOM.style.backgroundImage = "url(" + url + ")";
-        }
-    });
+    return imageRef.getDownloadURL();
 };
 
 //이미지 업로드

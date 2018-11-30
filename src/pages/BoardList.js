@@ -7,7 +7,7 @@ import SearchByTag from 'components/SearchByTag';
 import styles from 'shared/Board.module.css';
 import queryString from 'query-string';
 
-const incrementPageNum = 12;
+const incrementPageNum = 18;
 let totalPageNum;
 let sending = false;
 
@@ -204,7 +204,7 @@ const BoardListItems = ({ boards }) =>
         <li key={key}>
             <Link to={`/board-detail/${boards[key].id}`}>
                 <div className={styles.imgWrap}>
-                    <BoardImage url={boards[key].imageName} name={boards[key].id + index} />
+                    <BoardImage url={boards[key].imageName} />
                 </div>
                 <div className={styles.textWrap}>
                     <h3>{boards[key].title}</h3>

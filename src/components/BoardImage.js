@@ -3,12 +3,27 @@ import { storage } from '../firebase';
 
 class BoardImage extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            imageUrl: '',
+        };
+    }
+
     componentDidMount() {
-        storage.getImageUrl(this.props.url, this.props.name)
+        storage.getImageUrl(this.props.url).then(url =>
+            this.setState({
+                imageUrl: url
+            })
+        );
     }
 
     render() {
-        return <span id={this.props.name}></span>;
+        const imgStyle = {
+            backgroundImage: 'url(' + this.state.imageUrl + ')'
+        };
+        return <span style={imgStyle}></span>;
     }
 }
 
