@@ -75,7 +75,7 @@ const Navigation = () =>
 
 ### Serverless
 1. Firebase Authentication : 회원가입, 로그인, 비밀번호 변경
-2. Firebasa Realtime Database : 게시글, 댓글 DB
+2. Firebase Firestore : 게시글, 댓글, 사용자 DB
 3. Firebase Storage : 식당 이미지 저장
 4. Firebase Hosting : 도메인 생성과 서버 호스팅
 
@@ -137,12 +137,18 @@ class BoardDetail extends Component {
         ...
 
         //DB에서 해당 게시글 가져오기
-        db.onceGetBoardDetail(id).then(snapshot =>
-            this.setState({
-                detail: snapshot.val(),
-                key: id,
-            })
-        );
+        db.getBoardDetail(id).then(doc => {
+            if (doc.exists) {
+                this.setState({
+                    detail: doc.data(),
+                    key: id,
+                })
+            } else {
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
 
         ...
     }
@@ -248,7 +254,7 @@ __1. Firestore? Realtime Database?__
 
 우선, Realtime Database는 원하는 Query를 만들 수가 없었다. 예를 들면, 리스트 화면에서 최신 글을 제일 위로 올리고 싶었는데 내림차순 정렬 기능이 제공되지 않아 불가능했다. 또한 orderBy 함수를 한번에 하나 밖에 사용하지 못하기 때문에 두가지 필드의 검색을 하기 위해서는 _'date_rating'_ 과 같이 검색을 위한 필드를 만들어 데이터를 중복저장하는 방법으로만 가능했다.
 
-결론적으로, Realtime Databse는 단순한 데이터 저장과 읽기에는 적합하지만 좀 더 손쉽게 복잡한 데이터 처리를 하기 위해서는 Firestore로 대체할 수 있다는 판단 하에 조만간 DB를 Firestore로 마이그레이션할 예정이다.
+결론적으로, Realtime Databse는 단순한 데이터 저장과 읽기에는 적합하지만 좀 더 손쉽게 복잡한 데이터 처리를 하기 위해서는 Firestore로 대체할 수 있다는 판단 하에 ~~조만간 DB를 Firestore로 마이그레이션할 예정이다.~~ _=> 2018.11.30 업데이트 완료_
 
 __2. Scroll Restoration__
 

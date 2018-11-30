@@ -31,13 +31,6 @@ class BoardDetail extends Component {
         if (!id) return;
 
         //DB에서 해당 게시글 가져오기
-        // db.getBoardDetail(id).then(doc =>
-        //     this.setState({
-        //         detail: snapshot.val(),
-        //         key: id,
-        //     })
-        // );
-
         db.getBoardDetail(id).then(doc => {
             if (doc.exists) {
                 this.setState({
